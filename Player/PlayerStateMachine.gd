@@ -1,0 +1,268 @@
+extends StateMachine
+
+func _ready():
+	_add_state("Idle")
+	_add_state("Run")
+	_add_state("Slide")
+	_add_state("WallSlide")
+	_add_state("Dash")
+	_add_state("Jump")
+	_add_state("Fall")
+	_add_state("Kick")
+	_add_state("Crouch")
+	_add_state("Stealth")
+	_add_state("DoubleJump")
+	_add_state("Shoot")
+	_add_state("DownKick")
+	_add_state("Hurt")
+	call_deferred("_set_state",states.Idle)
+
+func _input(event):
+	if [states.Idle,states.Run].has(state):
+		if event.is_action_pressed("ui_select"):
+			if state==states.Idle:
+				parent.kick=true
+				_set_state(states.Kick)
+			elif state==states.Run and abs(parent.motion.x)>5 and parent.slideable:
+				parent._slide()
+				parent._dash(parent.dashDirection)
+				parent.slideable=false
+				parent.dashTimer.start()
+				parent.dash=true
+				_set_state(states.Slide)
+		if event.is_action_pressed("ui_up"):
+			parent._jump(150)
+		elif event.is_action_pressed("ui_down"):
+			if state==states.Run and abs(parent.motion.x)>5 and parent.slideable:
+				parent._slide()
+				parent._dash(parent.dashDirection)
+				parent.slideable=false
+				parent.dashTimer.start()
+				parent.dash=true
+				_set_state(states.Slide)
+			else:
+				_set_state(states.Crouch)
+				parent._crouch()
+	elif state==states.DoubleJump:
+		if event.is_action_pressed("ui_select") and parent.dashable:
+			parent.sprite.rotation_degrees=0
+			parent._dash(parent.dashDirection)
+			parent.dashable=false
+			parent.dash=true
+			_set_state(states.Dash)
+	elif [states.Jump,states.Fall].has(state):
+		if event.is_action_pressed("ui_select") and parent.dashable:
+			parent._dash(parent.dashDirection)
+			parent.dashable=false
+			parent.dash=true
+			_set_state(states.Dash)
+		if event.is_action_pressed("ui_up"):
+			_set_state(states.DoubleJump)
+			parent._doubleJump(150)
+		if state==states.Jump:
+			if event.is_action_released("ui_up"):
+				parent._jump(parent.motion.y/2)
+	elif state==states.WallSlide:
+		if event.is_action_pressed("ui_up"):
+			parent.gravity = 500
+			parent._wallJump(100)
+		elif event.is_action_pressed("ui_left") and parent._rightWall():
+			parent.wallSlideTimer.start()
+		elif event.is_action_pressed("ui_right") and parent._leftWall():
+			parent.wallSlideTimer.start()
+		if event.is_action_released("ui_left") or event.is_action_released("ui_right"):
+			parent.wallSlideTimer.stop()
+	elif [states.Stealth,states.Crouch].has(state):
+		if event.is_action_released("ui_down"):
+			parent.crouched=false
+		elif event.is_action_pressed("ui_down"):
+			parent.crouched=true
+func _state_logic(delta):
+	var direction=Input.get_action_strength("ui_right")-Input.get_action_strength("ui_left")
+	if ![states.WallSlide,states.Dash,states.Kick,states.Slide].has(state):
+		parent._direction(direction)
+	else:
+		pass
+	if [states.Idle,states.Run,states.Crouch,states.Stealth].has(state):
+		if parent.dashable==false:
+			parent.dashable=true
+		if direction !=0:
+			parent.side=direction
+		parent._walk(direction)
+	elif [states.DoubleJump,states.Jump,states.Fall].has(state):
+		parent._air(direction)
+		if state==states.DoubleJump:
+			parent.sprite.rotation_degrees+=30*parent.side
+	parent._physics(parent.gravity,delta)
+
+func _get_transition(delta):
+	match state:
+		states.Idle:
+			if !parent.is_on_floor():
+				if parent.motion.y>0:
+					return states.Fall
+				else:
+					return states.Jump
+			elif parent.motion.x!=0:
+				return states.Run
+		states.Run:
+			if !parent.is_on_floor():
+				if parent.motion.y>0:
+					return states.Fall
+				else:
+					return states.Jump
+			elif parent.motion.x==0:
+				return states.Idle
+		states.Jump:
+			if parent.is_on_floor():
+				return states.Idle
+			elif parent._leftWall() or parent._rightWall():
+				parent._wallSlide()
+				return states.WallSlide
+			elif parent.motion.y>0:
+				return states.Fall
+		states.DoubleJump:
+			if parent.is_on_floor():
+				parent.sprite.rotation_degrees=0
+				return states.Idle
+			elif parent._leftWall() or parent._rightWall():
+				parent._wallSlide()
+				parent.sprite.rotation_degrees=0
+				return states.WallSlide
+		states.Crouch:
+			if !parent._roof():
+				if !parent.crouched:
+					parent._uncrouch()
+					return states.Idle
+				elif !parent.is_on_floor():
+					parent._uncrouch()
+					return states.Fall
+			if parent.motion.x!=0:
+				return states.Stealth
+		states.Stealth:
+			if !parent._roof():
+				if !parent.crouched:
+					parent._uncrouch()
+					return states.Idle
+				elif !parent.is_on_floor():
+					parent._uncrouch()
+					return states.Fall
+			if parent.motion.x==0:
+				return states.Crouch
+		states.Kick:
+			if !parent.kick:
+				if parent.is_on_floor():
+					return states.Idle
+				else:
+					if parent.motion.y>0:
+						return states.Fall
+					else:
+						return states.Jump
+			elif parent._leftWall() or parent._rightWall():
+				parent.kick=false
+				parent._wallSlide()
+				return states.WallSlide
+		states.Shoot:
+			pass
+		states.DownKick:
+			pass
+		states.Fall:
+			if parent.is_on_floor():
+				return states.Idle
+			elif parent._leftWall() or parent._rightWall():
+				parent._wallSlide()
+				return states.WallSlide
+			else:
+				if parent.motion.y<=0:
+					return states.Jump
+		states.WallSlide:
+			if parent.is_on_floor():
+				parent.gravity = 500
+				return states.Idle
+			else:
+				if parent._leftWall()==false and parent._rightWall() == false:
+					if parent.motion.y<=0:
+						parent.gravity = 500
+						return states.Jump
+					elif parent.motion.y>0:
+						parent.gravity = 500
+						return states.Fall
+		states.Dash:
+			if !parent.dash:
+				if parent.is_on_floor():
+					return states.Idle
+				else:
+					if parent.motion.y>0:
+						return states.Fall
+					else:
+						return states.Jump
+			elif parent._leftWall() or parent._rightWall():
+				parent.dash=false
+				parent._wallSlide()
+				return states.WallSlide
+		states.Slide:
+			if !parent.dash:
+				if !parent._roof():
+					if !parent.crouched:
+						parent._uncrouch()
+						return states.Idle
+					elif !parent.is_on_floor():
+						if parent._leftWall() or parent._rightWall():
+							parent.dash=false
+							parent._wallSlide()
+							parent._uncrouch()
+							return states.WallSlide
+						parent.dash=false
+						parent._uncrouch()
+						return states.Fall
+				if parent.motion.x==0:
+					return states.Crouch
+				elif parent.motion.x!=0:
+					return states.Stealth
+			elif !parent.is_on_floor():
+				parent.slideable=true
+				parent.dashTimer.stop()
+				parent.dash=false
+				parent._uncrouch()
+				return states.Fall
+		states.Hurt:
+			pass
+	return null
+func _enter_state(new_state,old_state):
+	match state:
+		states.Idle:
+			parent.label.text=("Idle")
+			parent.plAnimation.play("Idle")
+		states.Run:
+			parent.label.text=("Run")
+			parent.plAnimation.play("Run")
+		states.Fall:
+			parent.label.text=("Fall")
+			parent.plAnimation.play("Fall")
+		states.Jump:
+			parent.label.text=("Jump")
+			parent.plAnimation.play("Jump")
+		states.DoubleJump:
+			parent.label.text=("DoubleJump")
+			parent.plAnimation.play("DoubleJump")
+		states.WallSlide:
+			parent.label.text=("WallSlide")
+			parent.plAnimation.play("WallSlide")
+		states.Crouch:
+			parent.label.text=("Crouch")
+			parent.plAnimation.play("Crouch")
+		states.Stealth:
+			parent.label.text=("Stealth")
+			parent.plAnimation.play("Stealth")
+		states.Dash:
+			parent.label.text=("Dash")
+			parent.plAnimation.play("AirKick")
+		states.Slide:
+			parent.label.text=("Slide")
+			parent.plAnimation.play("Slide")
+		states.Kick:
+			parent.label.text=("Kick")
+			parent.plAnimation.play("Kick")
+
+func _exit_state(old_state,new_state):
+	pass
