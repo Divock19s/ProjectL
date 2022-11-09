@@ -20,6 +20,7 @@ position = Vector2( 226, 82 )
 position = Vector2( -7, -18 )
 current = true
 zoom = Vector2( 0.2, 0.2 )
+smoothing_enabled = true
 
 [node name="Water" parent="." instance=ExtResource( 3 )]
 position = Vector2( 240, 96 )
