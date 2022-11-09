@@ -14,6 +14,9 @@ var crouched = false
 var dash =false
 var dashable=true
 var slideable=true
+var shoot=false
+var downKick=false
+var bull=false
 
 var canDoubleJump=true
 var canDash=true
@@ -26,10 +29,52 @@ onready var plAnimation=$pAnimation
 onready var label=$Label
 onready var dashTimer=$Dashtimer
 onready var wallSlideTimer=$wSlideTimer 
+onready var downShape=$Down/CollisionShape2D
+onready var kickShape=$Kick/CollisionShape2D
+onready var DownKick=$DownKick
+onready var Shoot=$Shoot
+
+onready var bullet=preload("res://Player/Bullet.tscn")
+
+func _ready():
+	_reset_attack()
+
+func _bullet():
+	if !bull and Shoot.frame==1:
+		print("yess")
+		var b=bullet.instance()
+		b.global_position=Shoot.global_position
+		b.direction=sign(Shoot.position.x)
+		get_parent().add_child(b)
+		bull=true
+
+func _reset_attack():
+	downShape.set_deferred("disabled",true)
+	kickShape.set_deferred("disabled",true)
+	DownKick.frame=5
+	Shoot.frame=4
+
+func _knock_up(amount):
+	_doubleJump(amount)
+
+func _knock(amount,drctn):
+	motion.x=0
+	motion.x+=amount*drctn
 
 func _direction(direction):
 	if direction!=0:
-		sprite.flip_h=direction<0
+		if direction<0:
+			sprite.flip_h=true
+			Shoot.flip_h=true
+			DownKick.flip_h=true
+			Shoot.position.x=-9
+			kickShape.position.x=-9
+		else:
+			sprite.flip_h=false
+			Shoot.flip_h=false
+			DownKick.flip_h=false
+			Shoot.position.x=9
+			kickShape.position.x=9
 		dashDirection=direction
 		
 func _walk(dir):
@@ -53,11 +98,19 @@ func _wallSlide():
 	if _rightWall():
 		dashDirection=-1
 		sprite.flip_h = true
+		Shoot.flip_h=true
+		DownKick.flip_h=true
+		Shoot.position.x=-9
+		kickShape.position.x=-9
 		side=-1
 		return -1
 	elif _leftWall():
 		dashDirection=1
 		sprite.flip_h = false
+		Shoot.flip_h=false
+		DownKick.flip_h=false
+		Shoot.position.x=9
+		kickShape.position.x=9
 		side=1
 		return 1
 
@@ -117,6 +170,8 @@ func _dash(dir):
 func _on_Dashtimer_timeout():
 	slideable=true
 
+func _shoot():
+	pass
 
 func _on_wSlideTimer_timeout():
 	if _rightWall():
@@ -134,3 +189,11 @@ func _on_pAnimation_animation_finished(anim_name):
 		dash=false
 	elif anim_name == "Kick":
 		kick=false
+	elif anim_name == "DownKick":
+		downKick=false
+	elif anim_name == "Shoot":
+		shoot=false
+func _on_Kick_body_entered(body):
+	_knock(25,-dashDirection)
+func _on_Down_body_entered(body):
+	_knock_up(150)
