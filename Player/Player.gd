@@ -30,6 +30,7 @@ onready var label=$Label
 onready var dashTimer=$Dashtimer
 onready var wallSlideTimer=$wSlideTimer 
 onready var runDustTimer=$RunDustTimer
+onready var wallDustTimer=$WallDustTimer
 onready var slideDustTimer=$SlideDustTimer
 onready var dashEffectTimer=$DashEffectTimer
 onready var downShape=$Down/CollisionShape2D
@@ -41,6 +42,8 @@ onready var shake=$Camera2D/Tween
 
 onready var bullet=preload("res://Player/Bullet.tscn")
 onready var RunDust=preload("res://Effects/WalkDust.tscn")
+onready var ImpactDust=preload("res://Effects/ImpactDust.tscn")
+onready var WallDust=preload("res://Effects/WallDust.tscn")
 onready var LandDust=preload("res://Effects/LandDust.tscn")
 onready var JumpDust=preload("res://Effects/JumpDust.tscn")
 onready var SlideDust=preload("res://Effects/SlideDust.tscn")
@@ -60,11 +63,25 @@ func _bullet():
 		get_parent().add_child(b)
 		bull=true
 
+func _ImpactDust(position,x,y,color1,color2,color3):
+	var i=ImpactDust.instance()
+	i.scale.x=x
+	i.scale.y=y
+	i.modulate = Color8(color1,color2,color3)
+	i.pos=position
+	get_parent().add_child(i)
+
 func _RunDust():
 	var d=RunDust.instance()
 	d.pos=global_position
 	d.flipp=sign(Shoot.position.x)
 	get_parent().add_child(d)
+	
+func _WallDust():
+	var w=WallDust.instance()
+	w.pos=global_position
+	w.flipp=sign(Shoot.position.x)
+	get_parent().add_child(w)
 
 func _JumpDust():
 	var j=JumpDust.instance()
@@ -95,11 +112,11 @@ func _reset_attack():
 	Shoot.frame=4
 
 func _knock_up(amount):
-	_shake(0.2,10,2,0)
+	_shake(0.2,7,2,0)
 	_doubleJump(amount)
 
 func _knock(amount,drctn):
-	_shake(0.2,10,2,0)
+	_shake(0.2,7,2,0)
 	motion.x=0
 	motion.x+=amount*drctn
 
@@ -118,7 +135,11 @@ func _direction(direction):
 			Shoot.position.x=9
 			kickShape.position.x=9
 		dashDirection=direction
-		
+	_camera(direction)
+
+func _camera(dir):
+	camera.position.x=lerp(camera.position.x,50*dir,0.05)
+
 func _walk(dir):
 	if dir !=0:
 		motion.x += dir*walkAcc
@@ -235,10 +256,14 @@ func _on_pAnimation_animation_finished(anim_name):
 		downKick=false
 	elif anim_name == "Shoot":
 		shoot=false
+
 func _on_Kick_body_entered(body):
 	_knock(25,-dashDirection)
+	_ImpactDust(kickShape.global_position,1,1,255,255,255)
+
 func _on_Down_body_entered(body):
 	_knock_up(150)
+	_ImpactDust(downShape.global_position,1.5,1.5,0,255,237)
 
 
 func _on_RunDustTimer_timeout():
@@ -254,3 +279,8 @@ func _on_SlideDustTimer_timeout():
 func _on_DashEffectTimer_timeout():
 	_DashEffect()
 	dashEffectTimer.start()
+
+
+func _on_WallDustTimer2_timeout():
+	_WallDust()
+	wallDustTimer.start()

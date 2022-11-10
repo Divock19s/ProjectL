@@ -169,10 +169,6 @@ func _get_transition(delta):
 						return states.Fall
 					else:
 						return states.Jump
-			elif parent._leftWall() or parent._rightWall():
-				parent.kick=false
-				parent._wallSlide()
-				return states.WallSlide
 		states.Shoot:
 			if !parent.shoot:
 				if parent.is_on_floor():
@@ -234,10 +230,6 @@ func _get_transition(delta):
 					else:
 						parent._reset_attack()
 						return states.Jump
-			elif parent._leftWall() or parent._rightWall():
-				parent.dash=false
-				parent._wallSlide()
-				return states.WallSlide
 		states.Slide:
 			if !parent.dash:
 				if !parent._roof():
@@ -288,6 +280,7 @@ func _enter_state(new_state,old_state):
 			parent.label.text=("DoubleJump")
 			parent.plAnimation.play("DoubleJump")
 		states.WallSlide:
+			parent.wallDustTimer.start()
 			parent.label.text=("WallSlide")
 			parent.plAnimation.play("WallSlide")
 		states.Crouch:
@@ -318,6 +311,8 @@ func _enter_state(new_state,old_state):
 
 func _exit_state(old_state,new_state):
 	match old_state:
+		states.WallSlide:
+			parent.wallDustTimer.stop()
 		states.Run:
 			parent.runDustTimer.stop()
 		states.Fall:

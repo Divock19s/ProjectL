@@ -531,6 +531,10 @@ frame = 4
 wait_time = 0.3
 one_shot = true
 
+[node name="WallDustTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
 [node name="SlideDustTimer" type="Timer" parent="."]
 wait_time = 0.05
 one_shot = true
@@ -548,5 +552,6 @@ zoom = Vector2( 0.2, 0.2 )
 [connection signal="body_entered" from="Kick" to="." method="_on_Kick_body_entered"]
 [connection signal="body_entered" from="Down" to="." method="_on_Down_body_entered"]
 [connection signal="timeout" from="RunDustTimer" to="." method="_on_RunDustTimer_timeout"]
+[connection signal="timeout" from="WallDustTimer" to="." method="_on_WallDustTimer2_timeout"]
 [connection signal="timeout" from="SlideDustTimer" to="." method="_on_SlideDustTimer_timeout"]
 [connection signal="timeout" from="DashEffectTimer" to="." method="_on_DashEffectTimer_timeout"]
