@@ -104,7 +104,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 8 ]
+"values": [ 24 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("DownKick:frame")
@@ -479,6 +479,7 @@ enabled = true
 cast_to = Vector2( -2, 0 )
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_left = -17.0
 margin_top = -15.0
 margin_right = 392.0
@@ -525,8 +526,23 @@ texture = ExtResource( 5 )
 hframes = 5
 frame = 4
 
+[node name="RunDustTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
+[node name="SlideDustTimer" type="Timer" parent="."]
+wait_time = 0.05
+one_shot = true
+
+[node name="DashEffectTimer" type="Timer" parent="."]
+wait_time = 0.03
+one_shot = true
+
 [connection signal="animation_finished" from="pAnimation" to="." method="_on_pAnimation_animation_finished"]
 [connection signal="timeout" from="Dashtimer" to="." method="_on_Dashtimer_timeout"]
 [connection signal="timeout" from="wSlideTimer" to="." method="_on_wSlideTimer_timeout"]
 [connection signal="body_entered" from="Kick" to="." method="_on_Kick_body_entered"]
 [connection signal="body_entered" from="Down" to="." method="_on_Down_body_entered"]
+[connection signal="timeout" from="RunDustTimer" to="." method="_on_RunDustTimer_timeout"]
+[connection signal="timeout" from="SlideDustTimer" to="." method="_on_SlideDustTimer_timeout"]
+[connection signal="timeout" from="DashEffectTimer" to="." method="_on_DashEffectTimer_timeout"]

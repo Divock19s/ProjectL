@@ -29,24 +29,59 @@ onready var plAnimation=$pAnimation
 onready var label=$Label
 onready var dashTimer=$Dashtimer
 onready var wallSlideTimer=$wSlideTimer 
+onready var runDustTimer=$RunDustTimer
+onready var slideDustTimer=$SlideDustTimer
+onready var dashEffectTimer=$DashEffectTimer
 onready var downShape=$Down/CollisionShape2D
 onready var kickShape=$Kick/CollisionShape2D
 onready var DownKick=$DownKick
 onready var Shoot=$Shoot
 
 onready var bullet=preload("res://Player/Bullet.tscn")
+onready var RunDust=preload("res://Effects/WalkDust.tscn")
+onready var LandDust=preload("res://Effects/LandDust.tscn")
+onready var JumpDust=preload("res://Effects/JumpDust.tscn")
+onready var SlideDust=preload("res://Effects/SlideDust.tscn")
+onready var DashEffect=preload("res://Effects/DashEffect.tscn")
 
 func _ready():
 	_reset_attack()
 
 func _bullet():
 	if !bull and Shoot.frame==1:
-		print("yess")
 		var b=bullet.instance()
 		b.global_position=Shoot.global_position
 		b.direction=sign(Shoot.position.x)
 		get_parent().add_child(b)
 		bull=true
+
+func _RunDust():
+	var d=RunDust.instance()
+	d.pos=global_position
+	d.flipp=sign(Shoot.position.x)
+	get_parent().add_child(d)
+
+func _JumpDust():
+	var j=JumpDust.instance()
+	j.pos=global_position
+	get_parent().add_child(j)
+
+func _LandDust():
+	var l=LandDust.instance()
+	l.pos=global_position
+	get_parent().add_child(l)
+
+func _SlideDust():
+	var s=SlideDust.instance()
+	s.pos=global_position
+	s.flipp=sign(Shoot.position.x)
+	get_parent().add_child(s)
+
+func _DashEffect():
+	var d=DashEffect.instance()
+	d.pos=global_position
+	d.flipp=sign(Shoot.position.x)
+	get_parent().add_child(d)
 
 func _reset_attack():
 	downShape.set_deferred("disabled",true)
@@ -197,3 +232,18 @@ func _on_Kick_body_entered(body):
 	_knock(25,-dashDirection)
 func _on_Down_body_entered(body):
 	_knock_up(150)
+
+
+func _on_RunDustTimer_timeout():
+	_RunDust()
+	runDustTimer.start()
+
+
+func _on_SlideDustTimer_timeout():
+	_SlideDust()
+	slideDustTimer.start()
+
+
+func _on_DashEffectTimer_timeout():
+	_DashEffect()
+	dashEffectTimer.start()

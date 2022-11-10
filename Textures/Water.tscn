@@ -32,6 +32,7 @@
 extents = Vector2( 32, 8 )
 
 [node name="Water" type="TileMap"]
+z_index = 1
 tile_set = SubResource( 1 )
 cell_size = Vector2( 8, 8 )
 format = 1

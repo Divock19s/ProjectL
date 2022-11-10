@@ -272,12 +272,16 @@ func _enter_state(new_state,old_state):
 			parent.label.text=("Idle")
 			parent.plAnimation.play("Idle")
 		states.Run:
+			parent._RunDust()
+			parent.runDustTimer.start()
 			parent.label.text=("Run")
 			parent.plAnimation.play("Run")
 		states.Fall:
 			parent.label.text=("Fall")
 			parent.plAnimation.play("Fall")
 		states.Jump:
+			if [states.Idle,states.Run].has(old_state):
+				parent._JumpDust()
 			parent.label.text=("Jump")
 			parent.plAnimation.play("Jump")
 		states.DoubleJump:
@@ -293,9 +297,13 @@ func _enter_state(new_state,old_state):
 			parent.label.text=("Stealth")
 			parent.plAnimation.play("Stealth")
 		states.Dash:
+			parent._DashEffect()
+			parent.dashEffectTimer.start()
 			parent.label.text=("Dash")
 			parent.plAnimation.play("AirKick")
 		states.Slide:
+			parent._SlideDust()
+			parent.slideDustTimer.start()
 			parent.label.text=("Slide")
 			parent.plAnimation.play("Slide")
 		states.Kick:
@@ -309,4 +317,16 @@ func _enter_state(new_state,old_state):
 			parent.plAnimation.play("Shoot")
 
 func _exit_state(old_state,new_state):
-	pass
+	match old_state:
+		states.Run:
+			parent.runDustTimer.stop()
+		states.Fall:
+			if [states.Idle,states.Run].has(new_state):
+				parent._LandDust()
+		states.DoubleJump:
+			if [states.Idle,states.Run].has(new_state):
+				parent._LandDust()
+		states.Slide:
+			parent.slideDustTimer.stop()
+		states.Dash:
+			parent.dashEffectTimer.stop()
