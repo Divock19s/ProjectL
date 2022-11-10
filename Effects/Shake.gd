@@ -6,7 +6,7 @@ var P=0
 onready var camera = get_parent()
 onready var D=$Duration
 onready var F=$Frequency 
-func _start(duration=0.2,frequency=15,amplitude=16,priority=0):
+func _start(duration,frequency,amplitude,priority):
 	if priority>=P:
 		P=priority
 		A=amplitude

@@ -322,9 +322,11 @@ func _exit_state(old_state,new_state):
 			parent.runDustTimer.stop()
 		states.Fall:
 			if [states.Idle,states.Run].has(new_state):
+				parent._shake(0.2,5,2,0)
 				parent._LandDust()
 		states.DoubleJump:
 			if [states.Idle,states.Run].has(new_state):
+				parent._shake(0.2,5,2,0)
 				parent._LandDust()
 		states.Slide:
 			parent.slideDustTimer.stop()

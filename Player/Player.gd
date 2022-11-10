@@ -36,6 +36,8 @@ onready var downShape=$Down/CollisionShape2D
 onready var kickShape=$Kick/CollisionShape2D
 onready var DownKick=$DownKick
 onready var Shoot=$Shoot
+onready var camera=$Camera2D
+onready var shake=$Camera2D/Tween
 
 onready var bullet=preload("res://Player/Bullet.tscn")
 onready var RunDust=preload("res://Effects/WalkDust.tscn")
@@ -46,6 +48,9 @@ onready var DashEffect=preload("res://Effects/DashEffect.tscn")
 
 func _ready():
 	_reset_attack()
+
+func _shake(duration=0.2,frequency=15,amplitude=16,priority=0):
+	shake._start(duration,frequency,amplitude,priority)
 
 func _bullet():
 	if !bull and Shoot.frame==1:
@@ -90,9 +95,11 @@ func _reset_attack():
 	Shoot.frame=4
 
 func _knock_up(amount):
+	_shake(0.2,10,2,0)
 	_doubleJump(amount)
 
 func _knock(amount,drctn):
+	_shake(0.2,10,2,0)
 	motion.x=0
 	motion.x+=amount*drctn
 
