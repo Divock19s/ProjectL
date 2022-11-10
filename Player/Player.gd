@@ -258,8 +258,22 @@ func _on_pAnimation_animation_finished(anim_name):
 		shoot=false
 
 func _on_Kick_body_entered(body):
-	_knock(25,-dashDirection)
 	_ImpactDust(kickShape.global_position,1,1,255,255,255)
+	if body.is_in_group("enemies"):
+		if !slideable:
+			body._hurt()
+		elif dash:
+			_knock(25,-dashDirection)
+			body._hurt("Attack",dashDirection,30,20,25)
+		elif kick:
+			_knock(25,-dashDirection)
+			body._hurt("Attack",dashDirection,15,20,25)
+		elif shoot:
+			_knock(25,-dashDirection)
+			body._hurt("Attack",dashDirection,20,20,40)
+		elif downKick:
+			_knock(25,-dashDirection)
+			body._hurt("Attack",0,40,0,0)
 
 func _on_Down_body_entered(body):
 	_knock_up(150)

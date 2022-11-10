@@ -2,7 +2,7 @@ extends "res://stateMachine.gd"
 
 func _ready():
 	_add_state("Patrol")
-	_add_state("Wake")
+	_add_state("Stand")
 	_add_state("Detect")
 	_add_state("FallDetect")
 	_add_state("Attack")
@@ -12,11 +12,18 @@ func _ready():
 	_add_state("Fall")
 	call_deferred("_set_state",states.Patrol)
 func _state_logic(delta):
+	if parent.hurt:
+		if state!=states.Hurt:
+			call_deferred("_set_state",states.Hurt)
 	if state==states.Patrol :
+		if parent.fale:
+			call_deferred("_set_state",states.Fale)
 		parent._move()
 		if parent.turn and (parent._back() or parent._floor() or parent.is_on_wall()):
 			parent._turn(-parent.direction)
 	elif state==states.Detect:
+		if parent.fale:
+			call_deferred("_set_state",states.Fale)
 		parent._move()
 		if parent.turn and (parent._back() or parent._floor() or parent.is_on_wall()):
 			parent._turn(-parent.direction)
@@ -60,9 +67,16 @@ func _get_transition(_delta):
 			elif parent.fale:
 				return states.Fale
 		states.Fale:
-			return states.Wake
+			return states.Stand
+		states.Hurt:
+			if !parent.hurt:
+				if parent.is_on_floor():
+					return states.Patrol
+				else:
+					return states.Fall
 	return null
 func _enter_state(new_state,old_state):
+	parent.hitShape.disabled=true
 	match state:
 		states.Patrol:
 			parent.speed = 20
@@ -84,4 +98,18 @@ func _enter_state(new_state,old_state):
 			parent.attack=true
 			parent.animation.play("Attack")
 		states.Fale:
-			return
+			if parent.failDirection==parent.direction:
+				parent.animation.play("FallBack")
+			else:
+				parent.animation.play("FallFront")
+			parent.FailTimer.start()
+		states.Stand:
+			if parent.failDirection==parent.direction:
+				parent.animation.play("StandBack")
+			else:
+				parent.animation.play("StandFront")
+		states.Hurt:
+			parent.animation.play("Hurt")
+func _exit_state(old_state,new_state):
+	if old_state==states.Attack:
+		parent.hitShape.disabled=true

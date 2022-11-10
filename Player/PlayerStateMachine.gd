@@ -295,6 +295,7 @@ func _enter_state(new_state,old_state):
 			parent.label.text=("Dash")
 			parent.plAnimation.play("AirKick")
 		states.Slide:
+			parent.kickShape.set_deferred("disabled",false)
 			parent._SlideDust()
 			parent.slideDustTimer.start()
 			parent.label.text=("Slide")
@@ -324,6 +325,7 @@ func _exit_state(old_state,new_state):
 				parent._shake(0.2,5,2,0)
 				parent._LandDust()
 		states.Slide:
+			parent.kickShape.set_deferred("disabled",true)
 			parent.slideDustTimer.stop()
 		states.Dash:
 			parent.dashEffectTimer.stop()
