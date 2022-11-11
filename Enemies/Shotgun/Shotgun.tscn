@@ -1,8 +1,8 @@
 [gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://Enemies/Soldier/StateMachine.gd" type="Script" id=1]
-[ext_resource path="res://Enemies/Soldier/Soldier.gd" type="Script" id=2]
-[ext_resource path="res://Assets/Enemies/mEnemny-Sheet.png" type="Texture" id=3]
+[ext_resource path="res://Enemies/Shotgun/ShotGunStateMachine.gd" type="Script" id=1]
+[ext_resource path="res://Enemies/Shotgun/Shotgun.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Enemies/sEnemy-Sheet.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 5, 7 )
@@ -33,17 +33,33 @@ tracks/1/keys = {
 "update": 1,
 "values": [ 1 ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("Area2D/CollisionShape2D:disabled")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0, 0.6, 0.8, 1 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
+
+[sub_resource type="Animation" id=14]
+resource_name = "Close"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ true, true, false, true ]
+"values": [ 0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:vframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray(  ),
+"transitions": PoolRealArray(  ),
+"update": 1,
+"values": [  ]
 }
 
 [sub_resource type="Animation" id=10]
@@ -203,24 +219,12 @@ tracks/2/keys = {
 "values": [ 1 ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("Area2D/CollisionShape2D:disabled")
+tracks/3/path = NodePath("Sprite:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ true ]
-}
-tracks/4/type = "value"
-tracks/4/path = NodePath("Sprite:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
@@ -276,13 +280,10 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="RectangleShape2D" id=8]
-extents = Vector2( 2.5, 3.5 )
-
-[sub_resource type="RectangleShape2D" id=14]
+[sub_resource type="RectangleShape2D" id=15]
 extents = Vector2( 5, 3 )
 
-[node name="Soldier" type="KinematicBody2D" groups=["enemies"]]
+[node name="Shotgun" type="KinematicBody2D" groups=["enemies"]]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource( 2 )
@@ -298,6 +299,7 @@ hframes = 25
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Attack = SubResource( 9 )
+anims/Close = SubResource( 14 )
 anims/Die = SubResource( 10 )
 anims/Fall = SubResource( 11 )
 anims/FallBack = SubResource( 4 )
@@ -308,14 +310,7 @@ anims/StandBack = SubResource( 12 )
 anims/StandFront = SubResource( 13 )
 anims/Walk = SubResource( 3 )
 
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 8.5, -10.5 )
-shape = SubResource( 8 )
-disabled = true
-
-[node name="SoldierStateMachine" type="Node" parent="."]
+[node name="ShotGunStateMachine" type="Node" parent="."]
 script = ExtResource( 1 )
 
 [node name="Floor" type="RayCast2D" parent="."]
@@ -326,7 +321,7 @@ cast_to = Vector2( 0, 3 )
 [node name="Front" type="RayCast2D" parent="."]
 position = Vector2( 4, -6 )
 enabled = true
-cast_to = Vector2( 50, 0 )
+cast_to = Vector2( 70, 0 )
 
 [node name="Back" type="RayCast2D" parent="."]
 position = Vector2( -4, -8 )
@@ -344,15 +339,27 @@ one_shot = true
 [node name="WallTimer" type="Timer" parent="."]
 wait_time = 0.2
 
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="ShootPosition" type="Position2D" parent="."]
+position = Vector2( 5, -8 )
+
+[node name="BulletTimer" type="Timer" parent="."]
+wait_time = 0.8
+one_shot = true
+
 [node name="Collide" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collide"]
 position = Vector2( 0, -11 )
-shape = SubResource( 14 )
+shape = SubResource( 15 )
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
-[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
 [connection signal="timeout" from="DetectTimer" to="." method="_on_DetectTimer_timeout"]
 [connection signal="timeout" from="FailTimer" to="." method="_on_FailTimer_timeout"]
 [connection signal="timeout" from="WallTimer" to="." method="_on_WallTimer_timeout"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]
+[connection signal="timeout" from="BulletTimer" to="." method="_on_BulletTimer_timeout"]
 [connection signal="body_entered" from="Collide" to="." method="_on_Collide_body_entered"]

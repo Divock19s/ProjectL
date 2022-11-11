@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 var detect=false
 var attack=false
+var battack=false
 var hurt=false
 var fale=false
 var turn=true
@@ -10,26 +11,33 @@ var stand=false
 
 var health=100
 var speed = 20
-var gravity = 200
+var gravity = 500
 var direction = 1
 var failDirection =1
 var motion=Vector2.ZERO
 
+onready var bullet=preload("res://Enemies/Eullet.tscn")
+onready var Spos=$ShootPosition
 onready var flor=$Floor
 onready var front=$Front
 onready var back=$Back
-onready var hitBox=$Area2D
-onready var hitShape=$Area2D/CollisionShape2D
-onready var hitShape2=$Collide/CollisionShape2D
 onready var animation=$AnimationPlayer
 onready var DetectTimer=$DetectTimer
+onready var BulletTimer=$BulletTimer
+onready var ShootTimer=$ShootTimer
 onready var FailTimer=$FailTimer
 onready var wallTimer=$WallTimer
 onready var sprite=$Sprite
+onready var hitShape2=$Collide/CollisionShape2D
 
 func _ready():
 	sprite.position.y=-10
-	hitShape.disabled=true
+
+func _shoot():
+	var b=bullet.instance()
+	b.global_position=Spos.global_position
+	b.direction=sign(Spos.position.x)
+	get_parent().add_child(b)
 
 func _hurt(type="fail",direct=0,damage=0,x=0,y=0):
 	if type=="fail":
@@ -80,7 +88,7 @@ func _detect():
 	var _name=front.get_collider()
 	if _name!=null:
 		if _name.name=="Player" :
-			if get_global_transform().origin.distance_to(front.get_collision_point()) <=12:
+			if get_global_transform().origin.distance_to(front.get_collision_point()) <=20:
 				return 2
 			return 1
 
@@ -93,7 +101,7 @@ func _turn(dir):
 		front.position.x=dir*4
 		back.scale.x=dir
 		back.position.x=dir*-4
-		hitBox.scale.x=dir
+		Spos.position.x=dir*5
 		turn=false
 		wallTimer.start()
 
@@ -103,7 +111,7 @@ func _on_DetectTimer_timeout():
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name=="Attack":
-		attack=false
+		battack=false
 	elif anim_name=="Hurt":
 		hurt=false
 	elif anim_name=="StandFront":
@@ -120,11 +128,14 @@ func _on_FailTimer_timeout():
 	fale=false
 
 
+func _on_ShootTimer_timeout():
+	attack=true
+
+
+func _on_BulletTimer_timeout():
+	_shoot()
+
+
 func _on_Collide_body_entered(body):
-	if "Player" in body.name:
-		body._kill()
-
-
-func _on_Area2D_body_entered(body):
 	if "Player" in body.name:
 		body._kill()

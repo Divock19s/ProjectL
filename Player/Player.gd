@@ -8,6 +8,7 @@ var gravity = 500
 var side=1
 var dashDirection=1
 
+var die=false
 var kick=false
 var dJump=true
 var crouched = false
@@ -17,7 +18,9 @@ var slideable=true
 var shoot=false
 var downKick=false
 var bull=false
+var sliding=false
 
+var canSlide=true
 var canDoubleJump=true
 var canDash=true
 var canWallJump=true
@@ -51,6 +54,9 @@ onready var DashEffect=preload("res://Effects/DashEffect.tscn")
 
 func _ready():
 	_reset_attack()
+
+func _kill():
+	die=true
 
 func _shake(duration=0.2,frequency=15,amplitude=16,priority=0):
 	shake._start(duration,frequency,amplitude,priority)
@@ -210,7 +216,7 @@ func _doubleJump(jum):
 	motion.y+=-jum
 
 func _physics(grav,del):
-	if !dash:
+	if !dash or sliding:
 		motion.y+=gravity*del
 		motion.y=clamp(motion.y,-gravity,gravity)
 	else:
@@ -226,15 +232,13 @@ func _leftWall():
 func _rightWall():
 	return $Right.is_colliding() or $Right2.is_colliding()
 
-func _dash(dir):
+func _dash(dir,slide):
+	sliding=slide
 	motion.x = dir*walkAcc*4
 	motion.x=clamp(motion.x,-walkSpeed*6,walkSpeed*6)
 
 func _on_Dashtimer_timeout():
 	slideable=true
-
-func _shoot():
-	pass
 
 func _on_wSlideTimer_timeout():
 	if _rightWall():

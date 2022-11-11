@@ -72,7 +72,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ 17, 18 ]
+"values": [ 12, 11 ]
 }
 
 [sub_resource type="Animation" id=4]

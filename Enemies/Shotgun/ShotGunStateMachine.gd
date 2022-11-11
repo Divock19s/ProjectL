@@ -5,7 +5,8 @@ func _ready():
 	_add_state("Stand")
 	_add_state("Detect")
 	_add_state("FallDetect")
-	_add_state("Attack")
+	_add_state("Shoot")
+	_add_state("Close")
 	_add_state("Hurt")
 	_add_state("Dead")
 	_add_state("Fale")
@@ -31,9 +32,9 @@ func _get_transition(_delta):
 		states.Patrol:
 			if parent._front():
 				if parent._detect()==1:
-					return states.Detect
+					return states.Shoot
 				elif parent._detect()==2:
-					return states.Attack
+					return states.Close
 			if !parent.is_on_floor() and parent.motion.y>1:
 				return states.Fall
 			elif parent.hurt:
@@ -43,11 +44,13 @@ func _get_transition(_delta):
 		states.Detect:
 			if!parent.detect:
 				return states.Patrol
+			elif parent.attack:
+				return states.Shoot
 			elif !parent.is_on_floor():
 				if parent.motion.y>1:
 					return states.FallDetect
 			elif parent._detect()==2:
-				return states.Attack
+				return states.Close
 			elif parent.fale:
 				return states.Fale
 		states.FallDetect:
@@ -59,8 +62,10 @@ func _get_transition(_delta):
 		states.Fall:
 			if parent.is_on_floor():
 				return states.Patrol
-		states.Attack:
-			if !parent.attack:
+		states.Close:
+			if parent.attack:
+				return states.Shoot
+			elif parent._detect()!=2:
 				return states.Patrol
 			elif parent.fale:
 				return states.Fale
@@ -76,15 +81,25 @@ func _get_transition(_delta):
 					return states.Patrol
 				else:
 					return states.Fall
+		states.Shoot:
+			if !parent.battack:
+				if parent._detect()==2:
+					return states.Close
+				else: return states.Detect
+			elif parent.fale:
+				return states.Fale
 	return null
 func _enter_state(new_state,old_state):
-	parent.hitShape.disabled=true
 	match state:
+		states.Close:
+			parent.motion.x=0
+			parent.ShootTimer.wait_time=1
+			parent.animation.play("Close")
 		states.Patrol:
-			parent.speed = 20
+			parent.ShootTimer.wait_time=2
 			parent.animation.play("Walk")
 		states.Detect:
-			parent.speed = 40
+			parent.ShootTimer.wait_time=2
 			parent.animation.play("Walk")
 			parent.detect=true
 			parent.DetectTimer.start()
@@ -95,10 +110,13 @@ func _enter_state(new_state,old_state):
 			if !(parent.DetectTimer.time_left>0):
 				parent.detect=true
 				parent.DetectTimer.start()
-		states.Attack:
-			parent.motion.x=0
-			parent.attack=true
+		states.Shoot:
+			parent.battack=true
 			parent.animation.play("Attack")
+			parent.BulletTimer.start()
+			parent.motion.x=0
+			parent.attack=false
+			parent.ShootTimer.start()
 		states.Fale:
 			parent.hitShape2.set_deferred("disabled",true)
 			parent.motion.x=0
@@ -118,10 +136,7 @@ func _enter_state(new_state,old_state):
 		states.Hurt:
 			parent.animation.play("Hurt")
 func _exit_state(old_state,new_state):
-	if old_state==states.Attack:
-		parent.hitShape.disabled=true
-	elif old_state==states.Fale:
+	if old_state==states.Fale:
 		parent.sprite.position.y=-10
 	elif old_state==states.Stand:
 		parent.hitShape2.set_deferred("disabled",false)
-		
