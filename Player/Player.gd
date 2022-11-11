@@ -261,16 +261,16 @@ func _on_Kick_body_entered(body):
 	_ImpactDust(kickShape.global_position,1,1,255,255,255)
 	if body.is_in_group("enemies"):
 		if !slideable:
-			body._hurt()
+			body._hurt("fail",dashDirection,0,0,0)
 		elif dash:
 			_knock(25,-dashDirection)
-			body._hurt("Attack",dashDirection,30,20,25)
+			body._hurt("Attack",dashDirection,50,50,70)
 		elif kick:
 			_knock(25,-dashDirection)
-			body._hurt("Attack",dashDirection,15,20,25)
+			body._hurt("Attack",dashDirection,15,40,50)
 		elif shoot:
 			_knock(25,-dashDirection)
-			body._hurt("Attack",dashDirection,20,20,40)
+			body._hurt("Attack",dashDirection,20,40,50)
 		elif downKick:
 			_knock(25,-dashDirection)
 			body._hurt("Attack",0,40,0,0)

@@ -67,7 +67,11 @@ func _get_transition(_delta):
 			elif parent.fale:
 				return states.Fale
 		states.Fale:
-			return states.Stand
+			if !parent.fale:
+				return states.Stand
+		states.Stand:
+			if !parent.stand:
+				return states.Patrol
 		states.Hurt:
 			if !parent.hurt:
 				if parent.is_on_floor():
@@ -98,18 +102,25 @@ func _enter_state(new_state,old_state):
 			parent.attack=true
 			parent.animation.play("Attack")
 		states.Fale:
+			parent.motion.x=0
 			if parent.failDirection==parent.direction:
 				parent.animation.play("FallBack")
 			else:
 				parent.animation.play("FallFront")
 			parent.FailTimer.start()
 		states.Stand:
+			parent.motion.x=0
 			if parent.failDirection==parent.direction:
 				parent.animation.play("StandBack")
+				parent.stand=true
 			else:
+				parent.stand=true
 				parent.animation.play("StandFront")
 		states.Hurt:
 			parent.animation.play("Hurt")
 func _exit_state(old_state,new_state):
 	if old_state==states.Attack:
 		parent.hitShape.disabled=true
+	elif old_state==states.Fale:
+		parent.sprite.position.y=-10
+		

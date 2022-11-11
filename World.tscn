@@ -31,12 +31,12 @@ tile_data = PoolIntArray( -1114112, 19, 0, -1114111, 19, 0, -1114110, 19, 0, -11
 
 [node name="TV" parent="." instance=ExtResource( 5 )]
 position = Vector2( 447, -8 )
-frame = 9
+frame = 7
 offset = Vector2( -8, 0 )
 
 [node name="TV2" parent="." instance=ExtResource( 5 )]
 position = Vector2( 400, 88 )
-frame = 9
+frame = 7
 offset = Vector2( -8, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]

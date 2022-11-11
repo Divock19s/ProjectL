@@ -6,6 +6,7 @@ var hurt=false
 var fale=false
 var turn=true
 var dead=false
+var stand=false
 
 var health=100
 var speed = 20
@@ -21,18 +22,19 @@ onready var hitBox=$Area2D
 onready var hitShape=$Area2D/CollisionShape2D
 onready var animation=$AnimationPlayer
 onready var DetectTimer=$DetectTimer
-onready var FailTimer=$DetectTimer
+onready var FailTimer=$FailTimer
 onready var wallTimer=$WallTimer
+onready var sprite=$Sprite
 
 func _ready():
+	sprite.position.y=-10
 	hitShape.disabled=true
 
 func _hurt(type="fail",direct=0,damage=0,x=0,y=0):
 	if type=="fail":
 		fale=true
-		print("1")
+		failDirection=direct
 	else:
-		print("2")
 		hurt=true
 		_knock_up(y)
 		_knock(x,direct)
@@ -87,7 +89,9 @@ func _turn(dir):
 		direction=dir
 		flor.position.x=4*dir
 		front.scale.x=dir
+		front.position.x=dir*4
 		back.scale.x=dir
+		back.position.x=dir*-4
 		hitBox.scale.x=dir
 		turn=false
 		wallTimer.start()
@@ -101,6 +105,10 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		attack=false
 	elif anim_name=="Hurt":
 		hurt=false
+	elif anim_name=="StandFront":
+		stand=false
+	elif anim_name=="StandBack":
+		stand=false
 
 
 func _on_WallTimer_timeout():

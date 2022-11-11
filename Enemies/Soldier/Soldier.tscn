@@ -80,7 +80,8 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=4]
 resource_name = "FallBack"
-length = 0.2
+length = 0.3
+step = 0.15
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -88,15 +89,28 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1 ),
+"times": PoolRealArray( 0, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ 16, 17 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -10 ), Vector2( 0, -17 ), Vector2( 0, -10 ) ]
+}
 
 [sub_resource type="Animation" id=6]
 resource_name = "FallFront"
-length = 0.2
+length = 0.3
+step = 0.15
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -104,10 +118,22 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1 ),
+"times": PoolRealArray( 0, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ 10, 11 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -10 ), Vector2( 0, -17 ), Vector2( 0, -10 ) ]
 }
 
 [sub_resource type="Animation" id=7]
@@ -188,6 +214,18 @@ tracks/3/keys = {
 "update": 0,
 "values": [ true ]
 }
+tracks/4/type = "value"
+tracks/4/path = NodePath("Sprite:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, -17 ) ]
+}
 
 [sub_resource type="Animation" id=12]
 resource_name = "StandBack"
@@ -243,7 +281,7 @@ extents = Vector2( 2.5, 3.5 )
 
 [node name="Soldier" type="KinematicBody2D" groups=["enemies"]]
 collision_layer = 2
-collision_mask = 2
+collision_mask = 0
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -251,7 +289,7 @@ position = Vector2( 0, -7 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 0, -10 )
+position = Vector2( 0, -17 )
 texture = ExtResource( 3 )
 hframes = 25
 
