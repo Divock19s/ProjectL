@@ -282,7 +282,7 @@ func _on_Kick_body_entered(body):
 			body._hurt("Attack",0,40,0,0)
 
 func _on_Down_body_entered(body):
-	_knock_up(150)
+	_knock_up(200)
 	_ImpactDust(downShape.global_position,1.5,1.5,0,255,237)
 
 

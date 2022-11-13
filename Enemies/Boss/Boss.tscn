@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Enemies/Boss/Boss.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/Boss/BossStateMachine.gd" type="Script" id=2]
@@ -147,7 +147,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id=21]
 resource_name = "Shoot"
-length = 0.4
+length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -155,10 +155,25 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.3 ),
+"times": PoolRealArray( 0, 0.4, 0.5 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ 11, 12, 13 ]
+}
+
+[sub_resource type="Animation" id=28]
+resource_name = "transit"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 11, 11 ]
 }
 
 [sub_resource type="Animation" id=23]
@@ -212,6 +227,7 @@ shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -24 )
+z_index = 10
 texture = ExtResource( 3 )
 hframes = 21
 
@@ -224,6 +240,7 @@ anims/JumpMid = SubResource( 26 )
 anims/Move = SubResource( 19 )
 anims/RESET = SubResource( 18 )
 anims/Shoot = SubResource( 21 )
+anims/transit = SubResource( 28 )
 
 [node name="HurtAnimation" type="AnimationPlayer" parent="."]
 anims/Hurt = SubResource( 23 )
@@ -250,19 +267,20 @@ wait_time = 3.0
 one_shot = true
 
 [node name="BulletTimer" type="Timer" parent="."]
-wait_time = 0.8
+wait_time = 0.4
 one_shot = true
 
 [node name="ShootPosition" type="Position2D" parent="."]
-position = Vector2( -12, -21 )
+position = Vector2( -11, -14.5 )
 
 [node name="ShootPosition2" type="Position2D" parent="."]
-position = Vector2( -12, -19 )
+position = Vector2( -11, -12.5 )
 
 [node name="ShootPosition3" type="Position2D" parent="."]
-position = Vector2( -12, -17 )
+position = Vector2( -11, -10.5 )
 
 [node name="Collide" type="Area2D" parent="."]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="Collide"]
 polygon = PoolVector2Array( -3, -25, 3, -25, 5, -23, 5, -19, 9, -15, 9, -10, 3, -10, -3, -10, -9, -10, -9, -15, -5, -19, -5, -23 )

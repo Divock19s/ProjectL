@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+var shoot=false
 var attack=false
 var battack=true
 var hurt=false
@@ -9,9 +10,10 @@ var charge=false
 var jumpp=false
 var jamp=false
 var tim=true
+var transit=true
 
 var jumpCount=0
-var health=1000
+var health=200
 var speed = 50
 var gravity = 500
 var jump = -400
@@ -42,6 +44,7 @@ onready var attackArea=$Area2D/CollisionShape2D
 onready var attackArea2d=$Area2D
 
 func _shoot(os):
+	print("shot")
 	var b=bullet.instance()
 	b.global_position=os.global_position
 	b.direction=sign(os.position.x)
@@ -78,7 +81,7 @@ func _detect():
 		return global_position.x-player.global_position.x
 
 func _close():
-	return _detectx()<=38 and _detecty() < 13
+	return _detectx()<=30 and _detecty() < 13
 
 func _jump(delta):
 	if abs(targetx-global_position.x) < 10 and abs(targetx-global_position.x) >0 :
@@ -101,24 +104,22 @@ func _target():
 	targetx = player.global_position.x
 	targety= player.global_position.y
 	rect = -sign(_detect())
-	jamp=true
 	animation.play("JumpMid")
 
 func _turn(dir):
-	if turn:
-		$Sprite.flip_h=dir==-1
-		direction=dir
-		Spos.position.x=dir*30
-		Spos2.position.x=dir*30
-		Spos3.position.x=dir*30
-		attackArea2d.scale.x=dir
-		turn=false
-		wallTimer.start()
+	$Sprite.flip_h=dir==-1
+	direction=dir
+	Spos.position.x=-dir*11
+	Spos2.position.x=-dir*11
+	Spos3.position.x=-dir*11
+	attackArea2d.scale.x=dir
+	turn=false
 
 func _on_DetectTimer_timeout():
 	battack=true
 
 func _on_AnimationPlayer_animation_finished(anim_name):
+	print(anim_name)
 	if anim_name=="Attack":
 		attack=false
 	elif anim_name=="Hurt":
@@ -126,14 +127,17 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	elif anim_name=="Jump":
 		_target()
 	elif anim_name=="JumpFall":
-		jumpCount+=1
 		jumpp=false
+	elif anim_name=="transit":
+		transit=false
+	elif anim_name=="Shoot":
+		shoot=false
 
 func _on_WallTimer_timeout():
-	turn=true
+	charge=false
 
 func _on_ShootTimer_timeout():
-	attack=true
+	shoot=true
 
 func _on_BulletTimer_timeout():
 	_shoot(Spos)

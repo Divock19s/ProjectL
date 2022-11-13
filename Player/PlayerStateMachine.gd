@@ -310,6 +310,7 @@ func _enter_state(new_state,old_state):
 			parent.label.text=("Kick")
 			parent.plAnimation.play("Kick")
 		states.DownKick:
+			parent.motion.y+=800
 			parent.label.text=("DownKick")
 			parent.plAnimation.play("DownKick")
 		states.Shoot:
