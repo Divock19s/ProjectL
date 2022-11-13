@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Textures/World.tres" type="TileSet" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Envirment/Obstales/Bridge.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Envirment/Obstales/Double Doors.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Envirment/Obstales/MovingPlatform.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Envirment/Obstales/Shooter.tscn" type="PackedScene" id=10]
 
 [node name="World" type="Node2D"]
 
@@ -34,12 +35,12 @@ tile_data = PoolIntArray( -1114112, 19, 0, -1114111, 19, 0, -1114110, 19, 0, -11
 
 [node name="TV" parent="." instance=ExtResource( 5 )]
 position = Vector2( 447, -8 )
-frame = 9
+frame = 8
 offset = Vector2( -8, 0 )
 
 [node name="TV2" parent="." instance=ExtResource( 5 )]
 position = Vector2( 400, 88 )
-frame = 9
+frame = 8
 offset = Vector2( -8, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
@@ -50,6 +51,11 @@ position = Vector2( 392, 144 )
 
 [node name="Smasher" parent="." instance=ExtResource( 6 )]
 position = Vector2( 548, 117 )
+
+[node name="Shooter" parent="." instance=ExtResource( 10 )]
+position = Vector2( 347, 139 )
+direction = 1
+distance = 200
 
 [node name="MovingPlatform" parent="." instance=ExtResource( 9 )]
 position = Vector2( 413, 113 )
