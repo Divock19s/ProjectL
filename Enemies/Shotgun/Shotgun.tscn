@@ -9,6 +9,7 @@ extents = Vector2( 5, 7 )
 
 [sub_resource type="Animation" id=9]
 resource_name = "Attack"
+length = 1.1
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -64,7 +65,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id=10]
 resource_name = "Die"
-length = 0.1
+length = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -228,12 +229,12 @@ tracks/3/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 0, -17 ) ]
+"values": [ Vector2( 0, -10 ) ]
 }
 
 [sub_resource type="Animation" id=12]
 resource_name = "StandBack"
-length = 0.1
+length = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -249,7 +250,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=13]
 resource_name = "StandFront"
-length = 0.1
+length = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -281,19 +282,20 @@ tracks/0/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id=15]
-extents = Vector2( 5, 3 )
+extents = Vector2( 4, 2.5 )
 
 [node name="Shotgun" type="KinematicBody2D" groups=["enemies"]]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource( 2 )
+direction = -1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -7 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 0, -17 )
+position = Vector2( 0, -10 )
 texture = ExtResource( 3 )
 hframes = 25
 
@@ -338,6 +340,7 @@ one_shot = true
 
 [node name="WallTimer" type="Timer" parent="."]
 wait_time = 0.2
+one_shot = true
 
 [node name="ShootTimer" type="Timer" parent="."]
 wait_time = 3.0
@@ -353,8 +356,11 @@ one_shot = true
 [node name="Collide" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collide"]
-position = Vector2( 0, -11 )
+position = Vector2( 0, -10.5 )
 shape = SubResource( 15 )
+
+[node name="HurtTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="timeout" from="DetectTimer" to="." method="_on_DetectTimer_timeout"]
@@ -363,3 +369,4 @@ shape = SubResource( 15 )
 [connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]
 [connection signal="timeout" from="BulletTimer" to="." method="_on_BulletTimer_timeout"]
 [connection signal="body_entered" from="Collide" to="." method="_on_Collide_body_entered"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_HurtTimer_timeout"]

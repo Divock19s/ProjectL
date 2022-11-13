@@ -13,6 +13,7 @@ var kick=false
 var dJump=true
 var crouched = false
 var dash =false
+var dead = true
 var dashable=true
 var slideable=true
 var shoot=false
@@ -42,6 +43,7 @@ onready var DownKick=$DownKick
 onready var Shoot=$Shoot
 onready var camera=$Camera2D
 onready var shake=$Camera2D/Tween
+onready var squash=$Squash
 
 onready var bullet=preload("res://Player/Bullet.tscn")
 onready var RunDust=preload("res://Effects/WalkDust.tscn")

@@ -26,7 +26,7 @@ func _state_logic(delta):
 		if parent.fale:
 			call_deferred("_set_state",states.Fale)
 		parent._move()
-	parent._physics()
+	parent._physics(delta)
 func _get_transition(_delta):
 	match state:
 		states.Patrol:
@@ -42,7 +42,7 @@ func _get_transition(_delta):
 			elif parent.fale:
 				return states.Fale
 		states.Detect:
-			if!parent.detect:
+			if !parent.detect or parent._detect()==3:
 				return states.Patrol
 			elif parent.attack:
 				return states.Shoot
@@ -78,6 +78,7 @@ func _get_transition(_delta):
 		states.Hurt:
 			if !parent.hurt:
 				if parent.is_on_floor():
+					parent.fale=false
 					return states.Patrol
 				else:
 					return states.Fall
@@ -87,6 +88,7 @@ func _get_transition(_delta):
 					return states.Close
 				else: return states.Detect
 			elif parent.fale:
+				parent.BulletTimer.stop()
 				return states.Fale
 	return null
 func _enter_state(new_state,old_state):
@@ -134,9 +136,13 @@ func _enter_state(new_state,old_state):
 				parent.stand=true
 				parent.animation.play("StandFront")
 		states.Hurt:
+			parent.hitShape2.set_deferred("disabled",true)
 			parent.animation.play("Hurt")
 func _exit_state(old_state,new_state):
 	if old_state==states.Fale:
+		parent.sprite.position.y=-10
+	elif [states.Fale,states.Hurt].has(old_state):
+		parent.hitShape2.set_deferred("disabled",false)
 		parent.sprite.position.y=-10
 	elif old_state==states.Stand:
 		parent.hitShape2.set_deferred("disabled",false)

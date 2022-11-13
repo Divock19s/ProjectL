@@ -8,10 +8,11 @@ var turn=true
 var dead=false
 var stand=false
 
+export (int) var direction = 1
+
 var health=100
 var speed = 20
-var gravity = 200
-var direction = 1
+var gravity = 500
 var failDirection =1
 var motion=Vector2.ZERO
 
@@ -29,18 +30,25 @@ onready var sprite=$Sprite
 
 func _ready():
 	sprite.position.y=-10
-	hitShape.disabled=true
+	hitShape.set_deferred("disabled",true)
+	_turn(direction)
 
 func _hurt(type="fail",direct=0,damage=0,x=0,y=0):
+	hitShape2.set_deferred("disabled",true)
 	if type=="fail":
 		fale=true
+		$HurtTimer.stop()
 		failDirection=direct
 	else:
+		if !fale:
+			$HurtTimer.start()
 		hurt=true
 		_knock_up(y)
 		_knock(x,direct)
 		health-=damage
 		health=clamp(health,0,100)
+	if direct==direction:
+		_turn(1)
 
 func _knock_up(amount):
 	motion.y=0
@@ -58,10 +66,10 @@ func _move():
 	motion.x+=speed*direction
 	motion.x=clamp(motion.x,-speed,speed)
 
-func _physics():
-	if !is_on_floor():
-		motion.y+=gravity
-		motion.y=clamp(motion.y,-gravity,gravity)
+func _physics(delta):
+	motion.y+=gravity*delta
+	if motion.y>gravity:
+		motion.y=gravity
 	motion=move_and_slide(motion,Vector2.UP)
 
 func _floor():
@@ -122,9 +130,16 @@ func _on_FailTimer_timeout():
 
 func _on_Collide_body_entered(body):
 	if "Player" in body.name:
-		body._kill()
+		if !body.dash:
+			body._kill()
+			print("boooo yaaaaa")
 
 
 func _on_Area2D_body_entered(body):
 	if "Player" in body.name:
 		body._kill()
+		print("yaaaaa boooo")
+
+
+func _on_HurtTimer_timeout():
+	hitShape2.set_deferred("disabled",false)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://Assets/Player/Player-Sheet.png" type="Texture" id=1]
 [ext_resource path="res://Player/Player.gd" type="Script" id=2]
@@ -13,7 +13,7 @@ extents = Vector2( 6, 3.5 )
 
 [sub_resource type="Animation" id=14]
 resource_name = "AirKick"
-length = 0.25
+length = 0.3
 step = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -34,10 +34,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.05, 0.25 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ true, false, true ]
+"values": [ false, true ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -55,9 +55,6 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 13 ]
 }
-
-[sub_resource type="Animation" id=18]
-resource_name = "Dash"
 
 [sub_resource type="Animation" id=3]
 resource_name = "Death"
@@ -93,8 +90,8 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=36]
 resource_name = "DownKick"
-length = 0.15
-step = 0.025
+length = 0.4
+step = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -114,7 +111,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15 ),
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 5, 0, 1, 2, 3, 4, 5 ]
@@ -126,7 +123,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.025, 0.125, 0.15 ),
+"times": PoolRealArray( 0, 0.05, 0.2, 0.3 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
 "values": [ true, false, true, true ]
@@ -399,6 +396,78 @@ tracks/0/keys = {
 "values": [ 27 ]
 }
 
+[sub_resource type="Animation" id=37]
+resource_name = "Jump"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0.875, 1.125 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=39]
+resource_name = "Land"
+length = 0.15
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.15 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.125, 0.875 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.15 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -4.76837e-07, 0 ), Vector2( -4.76837e-07, 1 ), Vector2( -4.76837e-07, 0 ) ]
+}
+
+[sub_resource type="Animation" id=38]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -4.76837e-07, 1 ) ]
+}
+
 [sub_resource type="RectangleShape2D" id=16]
 extents = Vector2( 6, 3.5 )
 
@@ -412,24 +481,39 @@ font_data = ExtResource( 3 )
 extents = Vector2( 2, 2.5 )
 
 [sub_resource type="RectangleShape2D" id=34]
-extents = Vector2( 6, 2 )
+extents = Vector2( 6, 5.5 )
 
 [node name="Player" type="KinematicBody2D"]
 z_index = -1
 script = ExtResource( 2 )
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 4 )
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 4.5 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
+position = Vector2( -4.76837e-07, 1 )
 texture = ExtResource( 1 )
 hframes = 28
+
+[node name="DownKick" type="Sprite" parent="."]
+position = Vector2( 0, 8 )
+texture = ExtResource( 6 )
+hframes = 6
+frame = 5
+
+[node name="Shoot" type="Sprite" parent="."]
+position = Vector2( 9, 0 )
+texture = ExtResource( 5 )
+hframes = 5
+frame = 4
 
 [node name="pAnimation" type="AnimationPlayer" parent="."]
 anims/AirKick = SubResource( 14 )
 anims/Crouch = SubResource( 2 )
-anims/Dash = SubResource( 18 )
 anims/Death = SubResource( 3 )
 anims/DoubleJump = SubResource( 4 )
 anims/DownKick = SubResource( 36 )
@@ -444,6 +528,11 @@ anims/Shoot = SubResource( 35 )
 anims/Slide = SubResource( 12 )
 anims/Stealth = SubResource( 13 )
 anims/WallSlide = SubResource( 15 )
+
+[node name="Squash" type="AnimationPlayer" parent="."]
+anims/Jump = SubResource( 37 )
+anims/Land = SubResource( 39 )
+anims/RESET = SubResource( 38 )
 
 [node name="CrouchCollision" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -2.5 )
@@ -465,7 +554,7 @@ enabled = true
 cast_to = Vector2( 2, 0 )
 
 [node name="Right2" type="RayCast2D" parent="."]
-position = Vector2( 5, 7 )
+position = Vector2( 5, 5 )
 enabled = true
 cast_to = Vector2( 2, 0 )
 
@@ -475,7 +564,7 @@ enabled = true
 cast_to = Vector2( -2, 0 )
 
 [node name="Left2" type="RayCast2D" parent="."]
-position = Vector2( -5, 7 )
+position = Vector2( -5, 5 )
 enabled = true
 cast_to = Vector2( -2, 0 )
 
@@ -489,17 +578,6 @@ rect_scale = Vector2( 0.08807, 0.100202 )
 custom_fonts/font = SubResource( 17 )
 text = "state"
 align = 1
-
-[node name="StateMachine" type="Node" parent="."]
-script = ExtResource( 4 )
-
-[node name="Dashtimer" type="Timer" parent="."]
-wait_time = 0.4
-one_shot = true
-
-[node name="wSlideTimer" type="Timer" parent="."]
-wait_time = 0.1
-one_shot = true
 
 [node name="Kick" type="Area2D" parent="."]
 collision_layer = 0
@@ -515,21 +593,17 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Down"]
-position = Vector2( 0, 11 )
+position = Vector2( 0, 14.5 )
 shape = SubResource( 34 )
 disabled = true
 
-[node name="DownKick" type="Sprite" parent="."]
-position = Vector2( 0, -2 )
-texture = ExtResource( 6 )
-hframes = 6
-frame = 5
+[node name="Dashtimer" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
 
-[node name="Shoot" type="Sprite" parent="."]
-position = Vector2( 9, 0 )
-texture = ExtResource( 5 )
-hframes = 5
-frame = 4
+[node name="wSlideTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
 
 [node name="RunDustTimer" type="Timer" parent="."]
 wait_time = 0.3
@@ -551,10 +625,10 @@ one_shot = true
 zoom = Vector2( 0.2, 0.2 )
 
 [connection signal="animation_finished" from="pAnimation" to="." method="_on_pAnimation_animation_finished"]
-[connection signal="timeout" from="Dashtimer" to="." method="_on_Dashtimer_timeout"]
-[connection signal="timeout" from="wSlideTimer" to="." method="_on_wSlideTimer_timeout"]
 [connection signal="body_entered" from="Kick" to="." method="_on_Kick_body_entered"]
 [connection signal="body_entered" from="Down" to="." method="_on_Down_body_entered"]
+[connection signal="timeout" from="Dashtimer" to="." method="_on_Dashtimer_timeout"]
+[connection signal="timeout" from="wSlideTimer" to="." method="_on_wSlideTimer_timeout"]
 [connection signal="timeout" from="RunDustTimer" to="." method="_on_RunDustTimer_timeout"]
 [connection signal="timeout" from="WallDustTimer" to="." method="_on_WallDustTimer2_timeout"]
 [connection signal="timeout" from="SlideDustTimer" to="." method="_on_SlideDustTimer_timeout"]

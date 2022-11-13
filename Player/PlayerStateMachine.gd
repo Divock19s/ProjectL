@@ -278,6 +278,7 @@ func _enter_state(new_state,old_state):
 			parent.plAnimation.play("Fall")
 		states.Jump:
 			if [states.Idle,states.Run].has(old_state):
+				parent.squash.play("Jump")
 				parent._JumpDust()
 			parent.label.text=("Jump")
 			parent.plAnimation.play("Jump")
@@ -326,14 +327,15 @@ func _exit_state(old_state,new_state):
 			parent.runDustTimer.stop()
 		states.Fall:
 			if [states.Idle,states.Run].has(new_state):
-				parent._shake(0.2,5,2,0)
+				parent.squash.play("Land")
 				parent._LandDust()
 		states.DoubleJump:
 			if [states.Idle,states.Run].has(new_state):
-				parent._shake(0.2,5,2,0)
+				parent.squash.play("Land")
 				parent._LandDust()
 		states.Slide:
 			parent.kickShape.set_deferred("disabled",true)
 			parent.slideDustTimer.stop()
 		states.Dash:
+			parent.motion.x=clamp(parent.motion.x,-parent.walkSpeed,parent.walkSpeed)
 			parent.dashEffectTimer.stop()
