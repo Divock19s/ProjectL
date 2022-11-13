@@ -1,14 +1,14 @@
 extends KinematicBody2D
 
-var detect=false
 var attack=false
-var battack=false
+var battack=true
 var hurt=false
 var turn=true
 var dead=false
-var stand=false
+var charge=false
 var jumpp=false
 var jamp=false
+var tim=true
 
 var jumpCount=0
 var health=1000
@@ -39,10 +39,7 @@ onready var wallTimer=$WallTimer
 onready var sprite=$Sprite
 onready var hitShape2=$Collide/CollisionShape2D
 onready var attackArea=$Area2D/CollisionShape2D
-onready var fallArea=$FallArea/CollisionShape2D
-
-func _ready():
-	fallArea.set_deferred("disabled",false)
+onready var attackArea2d=$Area2D
 
 func _shoot(os):
 	var b=bullet.instance()
@@ -59,7 +56,7 @@ func _hurt(type,direct,damage,x,y):
 		$HurtAnimation.play("Hurt")
 
 func _move():
-	motion.x+=speed*direction
+	motion.x+=speed*-sign(_detect())
 	motion.x=clamp(motion.x,-speed,speed)
 
 func _physics(delta):
@@ -81,7 +78,7 @@ func _detect():
 		return global_position.x-player.global_position.x
 
 func _close():
-	return _detectx()<=28 and _detecty() < 13
+	return _detectx()<=38 and _detecty() < 13
 
 func _jump(delta):
 	if abs(targetx-global_position.x) < 10 and abs(targetx-global_position.x) >0 :
@@ -114,26 +111,21 @@ func _turn(dir):
 		Spos.position.x=dir*30
 		Spos2.position.x=dir*30
 		Spos3.position.x=dir*30
+		attackArea2d.scale.x=dir
 		turn=false
 		wallTimer.start()
 
 func _on_DetectTimer_timeout():
-	detect=false
+	battack=true
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name=="Attack":
-		battack=false
+		attack=false
 	elif anim_name=="Hurt":
 		hurt=false
-	elif anim_name=="StandFront":
-		stand=false
-	elif anim_name=="StandBack":
-		stand=false
 	elif anim_name=="Jump":
-		fallArea.set_deferred("disabled",false)
 		_target()
 	elif anim_name=="JumpFall":
-		fallArea.set_deferred("disabled",true)
 		jumpCount+=1
 		jumpp=false
 
@@ -155,17 +147,18 @@ func _on_Collide_body_entered(body):
 
 
 func _on_Area2D_body_entered(body):
-	pass # Replace with function body.
+	pass
 
 
 func _on_ChargeTimer_timeout():
-	pass # Replace with function body.
+	charge=true
 
 
 func _on_IdleTimer_timeout():
-	pass # Replace with function body.
+	tim=false
 
 
 func _on_FallArea_body_entered(body):
 	if "Player" in body.name:
-		body._kill()
+		if !body.dash:
+			body._kill()
