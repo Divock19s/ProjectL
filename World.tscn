@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Textures/World.tres" type="TileSet" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Envirment/Obstales/Smasher.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Envirment/Obstales/Bridge.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Envirment/Obstales/Double Doors.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Envirment/Obstales/MovingPlatform.tscn" type="PackedScene" id=9]
 
 [node name="World" type="Node2D"]
 
@@ -42,13 +43,18 @@ frame = 9
 offset = Vector2( -8, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 463, 133 )
+position = Vector2( 414, 99 )
 
 [node name="Bridge" parent="." instance=ExtResource( 7 )]
 position = Vector2( 392, 144 )
 
 [node name="Smasher" parent="." instance=ExtResource( 6 )]
 position = Vector2( 548, 117 )
+
+[node name="MovingPlatform" parent="." instance=ExtResource( 9 )]
+position = Vector2( 413, 113 )
+move_to = Vector2( 56, -56 )
+speed = 6.0
 
 [node name="One Dore" parent="." instance=ExtResource( 8 )]
 position = Vector2( 519, 144 )
