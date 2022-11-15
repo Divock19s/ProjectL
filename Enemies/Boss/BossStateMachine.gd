@@ -27,24 +27,26 @@ func _state_logic(delta):
 	parent._physics(delta)
 
 func _get_transition(_delta):
-	if phase==0:
-		if state!=states.Dead:
-			return states.Dead
-	if phase==1:
-		return _phase1()
-	elif phase==2:
-		return _phase2()
-	elif phase==3:
-		return _phase3()
+	if parent.player.die:
+		if state!=states.Idle:
+			return states.Idle
+	else:
+		if phase==0:
+			if state!=states.Dead:
+				return states.Dead
+		if phase==1:
+			return _phase1()
+		elif phase==2:
+			return _phase2()
+		elif phase==3:
+			return _phase3()
 	return null
 
 func _enter_state(new_state,old_state):
-	print(state)
 	match state:
 		states.Transition:
 			parent.motion.x=0
 			parent.transit=true
-			print("yess")
 			parent.animation.play("transit")
 		states.Dead:
 			parent.play("Dead")

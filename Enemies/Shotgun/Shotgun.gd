@@ -17,6 +17,7 @@ var gravity = 500
 var failDirection =1
 var motion=Vector2.ZERO
 
+onready var player=get_parent().get_node("Player")
 onready var bullet=preload("res://Enemies/Eullet.tscn")
 onready var Spos=$ShootPosition
 onready var flor=$Floor
@@ -147,7 +148,9 @@ func _on_BulletTimer_timeout():
 
 func _on_Collide_body_entered(body):
 	if "Player" in body.name:
+		hitShape2.set_deferred("disabled",true)
 		body._kill()
+		$HurtTimer.start()
 
 
 func _on_HurtTimer_timeout():

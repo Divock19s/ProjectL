@@ -163,6 +163,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=28]
 resource_name = "transit"
+length = 1.1
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -170,10 +171,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.1, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 11, 11 ]
+"values": [ 29, 22, 23, 24, 25, 26, 27, 28, 29 ]
 }
 
 [sub_resource type="Animation" id=23]
@@ -229,7 +230,7 @@ shape = SubResource( 1 )
 position = Vector2( 0, -24 )
 z_index = 10
 texture = ExtResource( 3 )
-hframes = 21
+hframes = 30
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Attack = SubResource( 20 )
@@ -280,7 +281,6 @@ position = Vector2( -11, -12.5 )
 position = Vector2( -11, -10.5 )
 
 [node name="Collide" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="Collide"]
 polygon = PoolVector2Array( -3, -25, 3, -25, 5, -23, 5, -19, 9, -15, 9, -10, 3, -10, -3, -10, -9, -10, -9, -15, -5, -19, -5, -23 )

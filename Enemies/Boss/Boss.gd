@@ -28,6 +28,8 @@ var distance
 
 onready var player=get_parent().get_node("Player")
 onready var bullet=preload("res://Enemies/Eullet.tscn")
+onready var SlideDust=preload("res://Effects/SlideDust.tscn")
+onready var LandDust=preload("res://Effects/LandDust.tscn")
 onready var Spos=$ShootPosition
 onready var Spos2=$ShootPosition2
 onready var Spos3=$ShootPosition3
@@ -44,7 +46,6 @@ onready var attackArea=$Area2D/CollisionShape2D
 onready var attackArea2d=$Area2D
 
 func _shoot(os):
-	print("shot")
 	var b=bullet.instance()
 	b.global_position=os.global_position
 	b.direction=sign(os.position.x)
@@ -119,7 +120,6 @@ func _on_DetectTimer_timeout():
 	battack=true
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	print(anim_name)
 	if anim_name=="Attack":
 		attack=false
 	elif anim_name=="Hurt":

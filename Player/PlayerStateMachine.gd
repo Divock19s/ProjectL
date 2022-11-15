@@ -22,52 +22,49 @@ func _input(event):
 	if !parent.die:
 		if [states.Idle,states.Run].has(state):
 			if event.is_action_pressed("ui_select"):
-				if state==states.Idle:
-					parent.kick=true
-					_set_state(states.Kick)
-				elif state==states.Run and abs(parent.motion.x)>5 and parent.slideable:
+				parent.kick=true
+				_set_state(states.Kick)
+			elif event.is_action_pressed("ui_focus_next") and abs(parent.motion.x)>5 and parent.slideable:
+				if parent.diamonds >= 4:
 					parent.slideable=false
 					parent._slide()
 					parent._dash(parent.dashDirection,true)
 					parent.dashTimer.start()
 					parent.dash=true
 					_set_state(states.Slide)
-			elif event.is_action_pressed("ui_focus_next"):
-				parent.motion.x=0
-				parent.shoot=true
-				_set_state(states.Shoot)
+			elif event.is_action_pressed("ui_focus_prev"):
+				if parent.diamonds>=6:
+					parent.motion.x=0
+					parent.shoot=true
+					_set_state(states.Shoot)
 			if event.is_action_pressed("ui_up"):
 				parent._jump(150)
 			elif event.is_action_pressed("ui_down"):
-				if state==states.Run and abs(parent.motion.x)>5 and parent.slideable:
-					parent._slide()
-					parent._dash(parent.dashDirection,true)
-					parent.slideable=false
-					parent.dashTimer.start()
-					parent.dash=true
-					_set_state(states.Slide)
-				else:
-					_set_state(states.Crouch)
-					parent._crouch()
+				_set_state(states.Crouch)
+				parent._crouch()
 		elif state==states.DoubleJump:
-			if event.is_action_pressed("ui_select") and parent.dashable:
-				parent.sprite.rotation_degrees=0
-				parent._dash(parent.dashDirection,false)
-				parent.dashable=false
-				parent.dash=true
-				_set_state(states.Dash)
-			elif event.is_action_pressed("ui_focus_next"):
-				parent.downKick=true
-				_set_state(states.DownKick)
+			if event.is_action_pressed("ui_focus_next") and parent.dashable:
+				if parent.diamonds >=4:
+					parent.sprite.rotation_degrees=0
+					parent._dash(parent.dashDirection,false)
+					parent.dashable=false
+					parent.dash=true
+					_set_state(states.Dash)
+			elif event.is_action_pressed("ui_down"):
+				if parent.diamonds>=5:
+					parent.downKick=true
+					_set_state(states.DownKick)
 		elif [states.Jump,states.Fall].has(state):
-			if event.is_action_pressed("ui_select") and parent.dashable:
-				parent._dash(parent.dashDirection,false)
-				parent.dashable=false
-				parent.dash=true
-				_set_state(states.Dash)
-			if event.is_action_pressed("ui_up"):
-				_set_state(states.DoubleJump)
-				parent._doubleJump(150)
+			if event.is_action_pressed("ui_focus_next") and parent.dashable:
+				if parent.diamonds>=4:
+					parent._dash(parent.dashDirection,false)
+					parent.dashable=false
+					parent.dash=true
+					_set_state(states.Dash)
+			elif event.is_action_pressed("ui_up"):
+				if parent.diamonds>=3:
+					_set_state(states.DoubleJump)
+					parent._doubleJump(150)
 			if state==states.Jump:
 				if event.is_action_released("ui_up"):
 					parent._jump(parent.motion.y/2)
@@ -90,10 +87,8 @@ func _input(event):
 func _state_logic(delta):
 	if !parent.die:
 		var direction=Input.get_action_strength("ui_right")-Input.get_action_strength("ui_left")
-		if ![states.WallSlide,states.Dash,states.Kick,states.Slide].has(state):
+		if ![states.WallSlide,states.Dash,states.Kick,states.Slide,states.Kick].has(state):
 			parent._direction(direction)
-		else:
-			pass
 		if [states.Idle,states.Run,states.Crouch,states.Stealth].has(state):
 			if parent.dashable==false:
 				parent.dashable=true
@@ -108,6 +103,7 @@ func _state_logic(delta):
 			parent._bullet()
 	else:
 		if state!=states.Dead:
+			parent.motion.x=0
 			_set_state(states.Dead)
 	parent._physics(parent.gravity,delta)
 
@@ -133,8 +129,9 @@ func _get_transition(delta):
 			if parent.is_on_floor():
 				return states.Idle
 			elif parent._leftWall() or parent._rightWall():
-				parent._wallSlide()
-				return states.WallSlide
+				if parent.diamonds>=2:
+					parent._wallSlide()
+					return states.WallSlide
 			elif parent.motion.y>0:
 				return states.Fall
 		states.DoubleJump:
@@ -142,9 +139,10 @@ func _get_transition(delta):
 				parent.sprite.rotation_degrees=0
 				return states.Idle
 			elif parent._leftWall() or parent._rightWall():
-				parent._wallSlide()
-				parent.sprite.rotation_degrees=0
-				return states.WallSlide
+				if parent.diamonds>=2:
+					parent._wallSlide()
+					parent.sprite.rotation_degrees=0
+					return states.WallSlide
 		states.Crouch:
 			if !parent._roof():
 				if !parent.crouched:
@@ -186,33 +184,25 @@ func _get_transition(delta):
 					else:
 						parent.bull=false
 						return states.Jump
-			elif parent._leftWall() or parent._rightWall():
-				parent.kick=false
-				parent._wallSlide()
-				parent.bull=false
-				return states.WallSlide
 		states.DownKick:
 			if!parent.downKick:
 				if parent.is_on_floor():
 					parent.sprite.rotation_degrees=0
 					return states.Idle
-				elif parent._leftWall() or parent._rightWall():
-					parent._wallSlide()
-					parent.sprite.rotation_degrees=0
-					return states.WallSlide
 				else:
 					return states.DoubleJump
 		states.Fall:
 			if parent.is_on_floor():
 				return states.Idle
 			elif parent._leftWall() or parent._rightWall():
-				parent._wallSlide()
-				return states.WallSlide
+				if parent.diamonds>=2:
+					parent._wallSlide()
+					return states.WallSlide
 			else:
 				if parent.motion.y<=0:
 					return states.Jump
 		states.WallSlide:
-			if parent.is_on_floor():
+			if parent.is_on_floor() or parent.diamonds<1:
 				parent.gravity = 500
 				return states.Idle
 			else:
@@ -243,10 +233,11 @@ func _get_transition(delta):
 						return states.Idle
 					elif !parent.is_on_floor():
 						if parent._leftWall() or parent._rightWall():
-							parent.dash=false
-							parent._wallSlide()
-							parent._uncrouch()
-							return states.WallSlide
+							if parent.diamonds>=2:
+								parent.dash=false
+								parent._wallSlide()
+								parent._uncrouch()
+								return states.WallSlide
 						parent.dash=false
 						parent._uncrouch()
 						return states.Fall
@@ -308,7 +299,10 @@ func _enter_state(new_state,old_state):
 			parent.plAnimation.play("Slide")
 		states.Kick:
 			parent.label.text=("Kick")
-			parent.plAnimation.play("Kick")
+			if parent.motion.x!=0:
+				parent.plAnimation.play("AirKick")
+			else:
+				parent.plAnimation.play("Kick")
 		states.DownKick:
 			parent.motion.y+=800
 			parent.label.text=("DownKick")
@@ -322,6 +316,8 @@ func _enter_state(new_state,old_state):
 
 func _exit_state(old_state,new_state):
 	match old_state:
+		states.DownKick:
+			parent.spawned=false
 		states.WallSlide:
 			parent.wallDustTimer.stop()
 		states.Run:

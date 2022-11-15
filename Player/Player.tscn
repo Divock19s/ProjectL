@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://Assets/Player/Player-Sheet.png" type="Texture" id=1]
 [ext_resource path="res://Player/Player.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Assets/Player/RangeKick-Sheet.png" type="Texture" id=5]
 [ext_resource path="res://Assets/Player/Down-kick-Sheet.png" type="Texture" id=6]
 [ext_resource path="res://Player/Camera2D.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Player/Health.tscn" type="PackedScene" id=9]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 6, 3.5 )
@@ -58,7 +59,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=3]
 resource_name = "Death"
-length = 0.2
+length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -66,10 +67,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 12, 11 ]
+"values": [ 28, 29, 30, 31, 32, 33, 34 ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -90,8 +91,8 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=36]
 resource_name = "DownKick"
-length = 0.4
-step = 0.05
+length = 0.6
+step = 0.03
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -111,10 +112,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.05, 0.09, 0.12, 0.18, 0.24, 0.3, 0.36, 0.42, 0.48 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 5, 0, 1, 2, 3, 4, 5 ]
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Down/CollisionShape2D:disabled")
@@ -123,7 +124,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.3, 0.4 ),
+"times": PoolRealArray( 0, 0.39, 0.6 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ false, true, true ]
@@ -483,6 +484,50 @@ extents = Vector2( 2, 2.5 )
 [sub_resource type="RectangleShape2D" id=34]
 extents = Vector2( 6, 5.5 )
 
+[sub_resource type="Animation" id=40]
+resource_name = "Hurt"
+length = 0.65
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.45, 0.55, 0.65 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true, false, true, false, true, false, true, false, true ]
+}
+
+[sub_resource type="Animation" id=41]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+
 [node name="Player" type="KinematicBody2D"]
 z_index = -1
 script = ExtResource( 2 )
@@ -497,12 +542,11 @@ shape = SubResource( 1 )
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( -4.76837e-07, 1 )
 texture = ExtResource( 1 )
-hframes = 28
+hframes = 35
 
 [node name="DownKick" type="Sprite" parent="."]
-position = Vector2( 0, 8 )
 texture = ExtResource( 6 )
-hframes = 6
+hframes = 10
 frame = 5
 
 [node name="Shoot" type="Sprite" parent="."]
@@ -569,7 +613,6 @@ enabled = true
 cast_to = Vector2( -2, 0 )
 
 [node name="Label" type="Label" parent="."]
-visible = false
 margin_left = -17.0
 margin_top = -15.0
 margin_right = 392.0
@@ -622,8 +665,19 @@ wait_time = 0.05
 one_shot = true
 
 [node name="Camera2D" parent="." instance=ExtResource( 7 )]
+position = Vector2( 0, -20 )
 zoom = Vector2( 0.2, 0.2 )
 
+[node name="HurtAnimation" type="AnimationPlayer" parent="."]
+anims/Hurt = SubResource( 40 )
+anims/RESET = SubResource( 41 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Health" parent="CanvasLayer" instance=ExtResource( 9 )]
+
+[connection signal="diamonds_updated" from="." to="CanvasLayer/Health" method="_on_Player_diamonds_updated"]
+[connection signal="health_updated" from="." to="CanvasLayer/Health" method="_on_Player_health_updated"]
 [connection signal="animation_finished" from="pAnimation" to="." method="_on_pAnimation_animation_finished"]
 [connection signal="body_entered" from="Kick" to="." method="_on_Kick_body_entered"]
 [connection signal="body_entered" from="Down" to="." method="_on_Down_body_entered"]
@@ -633,3 +687,4 @@ zoom = Vector2( 0.2, 0.2 )
 [connection signal="timeout" from="WallDustTimer" to="." method="_on_WallDustTimer2_timeout"]
 [connection signal="timeout" from="SlideDustTimer" to="." method="_on_SlideDustTimer_timeout"]
 [connection signal="timeout" from="DashEffectTimer" to="." method="_on_DashEffectTimer_timeout"]
+[connection signal="animation_finished" from="HurtAnimation" to="." method="_on_HurtAnimation_animation_finished"]

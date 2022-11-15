@@ -16,6 +16,7 @@ var gravity = 500
 var failDirection =1
 var motion=Vector2.ZERO
 
+onready var player=get_parent().get_node("Player")
 onready var flor=$Floor
 onready var front=$Front
 onready var back=$Back
@@ -31,6 +32,7 @@ onready var sprite=$Sprite
 func _ready():
 	sprite.position.y=-10
 	hitShape.set_deferred("disabled",true)
+	hitShape2.set_deferred("disabled",false)
 	_turn(direction)
 
 func _hurt(type="fail",direct=0,damage=0,x=0,y=0):
@@ -130,15 +132,14 @@ func _on_FailTimer_timeout():
 
 func _on_Collide_body_entered(body):
 	if "Player" in body.name:
-		if !body.dash:
-			body._kill()
-			print("boooo yaaaaa")
+		hitShape2.set_deferred("disabled",true)
+		body._kill()
+		$HurtTimer.start()
 
 
 func _on_Area2D_body_entered(body):
 	if "Player" in body.name:
 		body._kill()
-		print("yaaaaa boooo")
 
 
 func _on_HurtTimer_timeout():
