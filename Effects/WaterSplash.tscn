@@ -33,7 +33,7 @@ animations = [ {
 
 [node name="WaterSplash" type="AnimatedSprite"]
 position = Vector2( 12, 0 )
-z_index = 2
+z_index = 5
 frames = SubResource( 6 )
 animation = "def"
 script = ExtResource( 2 )

@@ -133,13 +133,13 @@ func _on_FailTimer_timeout():
 func _on_Collide_body_entered(body):
 	if "Player" in body.name:
 		hitShape2.set_deferred("disabled",true)
-		body._kill()
+		body._kill(direction,1,50)
 		$HurtTimer.start()
 
 
 func _on_Area2D_body_entered(body):
 	if "Player" in body.name:
-		body._kill()
+		body._kill(direction,1,50)
 
 
 func _on_HurtTimer_timeout():

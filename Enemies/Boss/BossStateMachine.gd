@@ -14,12 +14,13 @@ func _ready():
 	call_deferred("_set_state",states.Idle)
 
 func _state_logic(delta):
-	_phases()
-	if state!=states.Attack and state!=states.Shoot:
+	if ![states.Attack,states.Shoot,states.Charge].has(state):
 		if (sign(parent._detect())!=0 and parent.direction!=sign(parent._detect())):
-			if parent._detectx()>10:
+			if parent._detectx()>50:
 				parent._turn(sign(parent._detect()))
 	if [states.Walk,states.Charge].has(state):
+		if state==states.Charge and parent.is_on_wall():
+				parent._turn(-parent.direction)
 		parent._move()
 	elif state==states.Jump:
 		if parent.jamp:
@@ -27,8 +28,8 @@ func _state_logic(delta):
 	parent._physics(delta)
 
 func _get_transition(_delta):
-	if parent.player.die:
-		if state!=states.Idle:
+	if parent.player.dead:
+		if ![states.Attack,states.Idle,states.Dead]:
 			return states.Idle
 	else:
 		if phase==0:
@@ -43,14 +44,19 @@ func _get_transition(_delta):
 	return null
 
 func _enter_state(new_state,old_state):
+	_phases()
 	match state:
 		states.Transition:
+			parent._shak(0.5,20,10,3)
 			parent.motion.x=0
 			parent.transit=true
 			parent.animation.play("transit")
 		states.Dead:
-			parent.play("Dead")
+			parent._shak(0.8,20,10,5)
+			parent.animation.play("Dead")
+			parent.motion.x=0
 		states.Attack:
+			parent._turn(sign(parent._detect()))
 			parent.DetectTimer.start()
 			parent.motion.x=0
 			parent.attack=true
@@ -81,7 +87,9 @@ func _enter_state(new_state,old_state):
 				parent.IdleTimer.start()
 			parent.animation.play("Move")
 		states.Charge:
-			parent.speed=100
+			parent.slideDust()
+			parent.SlideDustTimer.start()
+			parent.speed=200
 			parent.motion.x=0
 			parent.wallTimer.wait_time=4
 			parent.wallTimer.start()
@@ -94,7 +102,11 @@ func _enter_state(new_state,old_state):
 
 func _exit_state(old_state,new_state):
 	match old_state:
+		states.Jump:
+			parent._shak(0.2,20,10,4)
+			parent._ladDust()
 		states.Charge:
+			parent.SlideDustTimer.stop()
 			parent.jamp=true
 		states.Attack:
 			parent.battack=false

@@ -30,3 +30,4 @@ func _on_Duration_timeout():
 	F.stop()
 func _on_Frequency_timeout():
 	_shake()
+	F.start()

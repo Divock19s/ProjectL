@@ -149,7 +149,7 @@ func _on_BulletTimer_timeout():
 func _on_Collide_body_entered(body):
 	if "Player" in body.name:
 		hitShape2.set_deferred("disabled",true)
-		body._kill()
+		body._kill(direction,1,50)
 		$HurtTimer.start()
 
 

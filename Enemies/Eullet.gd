@@ -29,7 +29,7 @@ func _ImpactDust(position,x,y,color1,color2,color3):
 
 func _on_Bullet_body_entered(body):
 	if "Player" in body.name:
-		body._kill()
+		body._kill(direction,1,10)
 	_ImpactDust(global_position,1,1,255,106,106)
 	call_deferred("queue_free")
 

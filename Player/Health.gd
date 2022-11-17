@@ -79,7 +79,8 @@ func _on_Player_health_updated(health):
 func _on_Health_Duration_timeout():
 	_reset(Health_tween,heart)
 	hF.stop()
-	heart.modulate=Color8(255,255,255,255)
+	heart1.modulate=Color8(255,255,255,255)
+	heart2.modulate=Color8(255,255,255,255)
 
 
 func _on_Health_Frequency_timeout():
@@ -95,7 +96,12 @@ func _on_Diamond_Frequency_timeout():
 func _on_Diamond_Duration_timeout():
 	_reset(Diamond_tween,diamond)
 	dF.stop()
-	diamond.modulate=Color8(255,255,255,255)
+	diamond1.modulate=Color8(255,255,255,255)
+	diamond2.modulate=Color8(255,255,255,255)
+	diamond3.modulate=Color8(255,255,255,255)
+	diamond4.modulate=Color8(255,255,255,255)
+	diamond5.modulate=Color8(255,255,255,255)
+	diamond6.modulate=Color8(255,255,255,255)
 
 
 func _on_Player_diamonds_updated(diamonds,dir):

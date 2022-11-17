@@ -30,10 +30,10 @@ func _ImpactDust(position,x,y,color1,color2,color3):
 func _on_Bullet_body_entered(body):
 	if body.is_in_group("enemies"):
 		body._hurt("Attack",direction,15,20,25)
-	_ImpactDust(global_position,1,1,0,255,237)
+	_ImpactDust(global_position,1,1,0,199,255)
 	call_deferred("queue_free")
 
 
 func _on_Timer_timeout():
-	_ImpactDust(global_position,1,1,0,255,237)
+	_ImpactDust(global_position,1,1,0,199,255)
 	call_deferred("queue_free")

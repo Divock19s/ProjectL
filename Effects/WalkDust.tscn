@@ -24,6 +24,7 @@ animations = [ {
 } ]
 
 [node name="WalkDust" type="AnimatedSprite"]
+z_index = 5
 frames = SubResource( 6 )
 animation = "def"
 centered = false

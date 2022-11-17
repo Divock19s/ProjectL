@@ -36,6 +36,7 @@ animations = [ {
 } ]
 
 [node name="SlideDust" type="AnimatedSprite"]
+z_index = 5
 frames = SubResource( 6 )
 animation = "def"
 script = ExtResource( 2 )

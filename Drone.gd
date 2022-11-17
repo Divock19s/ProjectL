@@ -10,11 +10,11 @@ func _ready():
 func _process(_delta):
 	var distance = global_position.distance_to(player.global_position)
 	if distance>150:
-		if speed !=0.05:
-			speed = 0.05
+		if speed !=0.07:
+			speed = 0.07
 	elif distance<100:
-		if speed !=0.01:
-			speed = 0.01
+		if speed !=0.02:
+			speed = 0.02
 	elif distance<50:
 		if speed !=0.005:
 			speed = 0.005

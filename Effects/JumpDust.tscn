@@ -25,6 +25,7 @@ animations = [ {
 
 [node name="JumpDust" type="AnimatedSprite"]
 position = Vector2( -10, -9 )
+z_index = 5
 frames = SubResource( 6 )
 animation = "def"
 centered = false

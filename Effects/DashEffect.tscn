@@ -28,7 +28,7 @@ animations = [ {
 } ]
 
 [node name="SlideDust" type="AnimatedSprite"]
-modulate = Color( 0, 0.956863, 1, 1 )
+modulate = Color( 0, 0.780392, 1, 1 )
 z_index = -2
 frames = SubResource( 6 )
 animation = "def"

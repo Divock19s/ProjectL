@@ -32,7 +32,7 @@ animations = [ {
 "frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ) ],
 "loop": true,
 "name": "def",
-"speed": 20.0
+"speed": 15.0
 } ]
 
 [node name="SlideDust" type="AnimatedSprite"]

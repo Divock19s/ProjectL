@@ -51,7 +51,8 @@ func _input(event):
 					parent.dash=true
 					_set_state(states.Dash)
 			elif event.is_action_pressed("ui_down"):
-				if parent.diamonds>=5:
+				if parent.diamonds>=5 and parent.dowcount == 1:
+					parent.dowcount = 0
 					parent.downKick=true
 					_set_state(states.DownKick)
 		elif [states.Jump,states.Fall].has(state):
@@ -65,6 +66,11 @@ func _input(event):
 				if parent.diamonds>=3:
 					_set_state(states.DoubleJump)
 					parent._doubleJump(150)
+			elif event.is_action_pressed("ui_down"):
+				if parent.diamonds>=5 and parent.dowcount == 1:
+					parent.dowcount = 0
+					parent.downKick=true
+					_set_state(states.DownKick)
 			if state==states.Jump:
 				if event.is_action_released("ui_up"):
 					parent._jump(parent.motion.y/2)
@@ -87,7 +93,8 @@ func _input(event):
 func _state_logic(delta):
 	if !parent.die:
 		var direction=Input.get_action_strength("ui_right")-Input.get_action_strength("ui_left")
-		if ![states.WallSlide,states.Dash,states.Kick,states.Slide,states.Kick].has(state):
+		parent._camera(direction)
+		if ![states.WallSlide,states.Dash,states.Kick,states.Slide,states.Kick,states.Shoot].has(state):
 			parent._direction(direction)
 		if [states.Idle,states.Run,states.Crouch,states.Stealth].has(state):
 			if parent.dashable==false:
@@ -108,6 +115,9 @@ func _state_logic(delta):
 	parent._physics(parent.gravity,delta)
 
 func _get_transition(delta):
+	if parent.dead:
+		if state!=states.Dead:
+			return states.Dead
 	match state:
 		states.Idle:
 			if !parent.is_on_floor():
@@ -128,10 +138,6 @@ func _get_transition(delta):
 		states.Jump:
 			if parent.is_on_floor():
 				return states.Idle
-			elif parent._leftWall() or parent._rightWall():
-				if parent.diamonds>=2:
-					parent._wallSlide()
-					return states.WallSlide
 			elif parent.motion.y>0:
 				return states.Fall
 		states.DoubleJump:
@@ -257,58 +263,47 @@ func _get_transition(delta):
 func _enter_state(new_state,old_state):
 	match state:
 		states.Idle:
-			parent.label.text=("Idle")
+			parent.dowcount=1
 			parent.plAnimation.play("Idle")
 		states.Run:
+			parent.dowcount=1
 			parent._RunDust()
 			parent.runDustTimer.start()
-			parent.label.text=("Run")
 			parent.plAnimation.play("Run")
 		states.Fall:
-			parent.label.text=("Fall")
 			parent.plAnimation.play("Fall")
 		states.Jump:
 			if [states.Idle,states.Run].has(old_state):
 				parent.squash.play("Jump")
 				parent._JumpDust()
-			parent.label.text=("Jump")
 			parent.plAnimation.play("Jump")
 		states.DoubleJump:
-			parent.label.text=("DoubleJump")
 			parent.plAnimation.play("DoubleJump")
 		states.WallSlide:
 			parent.wallDustTimer.start()
-			parent.label.text=("WallSlide")
 			parent.plAnimation.play("WallSlide")
 		states.Crouch:
-			parent.label.text=("Crouch")
 			parent.plAnimation.play("Crouch")
 		states.Stealth:
-			parent.label.text=("Stealth")
 			parent.plAnimation.play("Stealth")
 		states.Dash:
 			parent._DashEffect()
 			parent.dashEffectTimer.start()
-			parent.label.text=("Dash")
 			parent.plAnimation.play("AirKick")
 		states.Slide:
 			parent.kickShape.set_deferred("disabled",false)
 			parent._SlideDust()
 			parent.slideDustTimer.start()
-			parent.label.text=("Slide")
 			parent.plAnimation.play("Slide")
 		states.Kick:
-			parent.label.text=("Kick")
 			if parent.motion.x!=0:
 				parent.plAnimation.play("AirKick")
 			else:
 				parent.plAnimation.play("Kick")
 		states.DownKick:
-			parent.motion.y+=800
-			parent.label.text=("DownKick")
+			parent.downTimer.start()
 			parent.plAnimation.play("DownKick")
 		states.Shoot:
-			parent.label.text=("Shoot")
 			parent.plAnimation.play("Shoot")
 		states.Dead:
 			parent.motion.x=0
@@ -317,6 +312,7 @@ func _enter_state(new_state,old_state):
 func _exit_state(old_state,new_state):
 	match old_state:
 		states.DownKick:
+			parent.sprite.rotation_degrees=0
 			parent.spawned=false
 		states.WallSlide:
 			parent.wallDustTimer.stop()
@@ -327,6 +323,7 @@ func _exit_state(old_state,new_state):
 				parent.squash.play("Land")
 				parent._LandDust()
 		states.DoubleJump:
+			parent.sprite.rotation_degrees=0
 			if [states.Idle,states.Run].has(new_state):
 				parent.squash.play("Land")
 				parent._LandDust()

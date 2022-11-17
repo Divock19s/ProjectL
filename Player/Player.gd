@@ -10,8 +10,8 @@ var motion = Vector2.ZERO
 var gravity = 500
 var side=1
 var dashDirection=1
-var diamonds =0 setget _set_diamonds
-var health =4 setget _set_health
+var diamonds = Global.diamonds setget _set_diamonds
+var health = Global.health setget _set_health
 var dowcount = 1
 
 var die=false
@@ -19,7 +19,7 @@ var kick=false
 var dJump=true
 var crouched = false
 var dash =false
-var dead = true
+var dead = false
 var dashable=true
 var slideable=true
 var shoot=false
@@ -38,13 +38,13 @@ var canDownKick=true
 
 onready var sprite=$Sprite
 onready var plAnimation=$pAnimation
-onready var label=$Label
 onready var dashTimer=$Dashtimer
 onready var wallSlideTimer=$wSlideTimer 
 onready var runDustTimer=$RunDustTimer
 onready var wallDustTimer=$WallDustTimer
 onready var slideDustTimer=$SlideDustTimer
 onready var dashEffectTimer=$DashEffectTimer
+onready var downTimer=$downTimer
 onready var downShape=$Down/CollisionShape2D
 onready var kickShape=$Kick/CollisionShape2D
 onready var DownKick=$DownKick
@@ -63,14 +63,18 @@ onready var LandDust=preload("res://Effects/LandDust.tscn")
 onready var JumpDust=preload("res://Effects/JumpDust.tscn")
 onready var SlideDust=preload("res://Effects/SlideDust.tscn")
 onready var DashEffect=preload("res://Effects/DashEffect.tscn")
+onready var explo=preload("res://Envirment/Explosion.tscn")
 
 func _ready():
+	_set_health(health)
+	_set_diamonds(diamonds)
 	_reset_attack()
 
-func _kill():
-	if !downKick:
+func _kill(dir,amm,kno):
 		if hurtable:
-			_set_health(health-1)
+			_set_health(health-amm)
+			_knock(dir,kno)
+			_knock_up(kno/2)
 
 func _shake(duration=0.2,frequency=15,amplitude=16,priority=0):
 	shake._start(duration,frequency,amplitude,priority)
@@ -139,13 +143,15 @@ func _reset_attack():
 	Shoot.frame=4
 
 func _knock_up(amount):
-	_shake(0.2,7,2,0)
-	_doubleJump(amount)
+	if !dead:
+		_shake(0.2,7,2,0)
+		_doubleJump(amount)
 
 func _knock(amount,drctn):
-	_shake(0.2,7,2,0)
-	motion.x=0
-	motion.x+=amount*drctn
+	if !dead:
+		_shake(0.2,7,2,0)
+		motion.x=0
+		motion.x+=amount*drctn
 
 func _direction(direction):
 	if direction!=0:
@@ -162,16 +168,9 @@ func _direction(direction):
 			Shoot.position.x=9
 			kickShape.position.x=9
 		dashDirection=direction
-	_camera(direction)
 
 func _camera(dir):
 	camera.position.x=lerp(camera.position.x,50*dir,0.05)
-
-func _cameray():
-	if motion.y>250:
-		camera.position.y=lerp(camera.position.y,20,0.1)
-	else:
-		camera.position.y=lerp(camera.position.y,-20,0.05)
 
 func _walk(dir):
 	if dir !=0:
@@ -243,7 +242,6 @@ func _doubleJump(jum):
 	motion.y+=-jum
 
 func _physics(grav,del):
-	_cameray()
 	if !dash or sliding:
 		motion.y+=gravity*del
 		motion.y=clamp(motion.y,-gravity,gravity)
@@ -282,6 +280,7 @@ func _on_pAnimation_animation_finished(anim_name):
 		kick=false
 		dash=false
 	elif anim_name == "Slide":
+		sliding=false
 		dash=false
 	elif anim_name == "Kick":
 		kick=false
@@ -291,7 +290,7 @@ func _on_pAnimation_animation_finished(anim_name):
 		shoot=false
 
 func _on_Kick_body_entered(body):
-	_ImpactDust(kickShape.global_position,1,1,255,255,255,false)
+	_ImpactDust(kickShape.global_position,1,1,0,199,255,false)
 	if body.is_in_group("enemies"):
 		if !slideable:
 			body._hurt("fail",dashDirection,0,0,0)
@@ -306,12 +305,13 @@ func _on_Kick_body_entered(body):
 			body._hurt("Attack",dashDirection,20,40,50)
 
 func _on_Down_body_entered(body):
+	downTimer.stop()
 	motion.y=0
 	_knock_up(200)
 	if !spawned:
 		if body.is_in_group("enemies"):
 			body._hurt("Attack",dashDirection,50,0,0)
-		_ImpactDust(downShape.global_position,1.5,1.5,203,219,252,true)
+		_ImpactDust(downShape.global_position,1.5,1.5,0,199,255,true)
 		spawned = true
 
 
@@ -335,7 +335,12 @@ func _on_WallDustTimer2_timeout():
 	wallDustTimer.start()
 
 func _die():
-	pass
+	var r = explo.instance()
+	r.global_position=global_position
+	r.modulate=Color8(0,199,255)
+	get_parent().add_child(r)
+	dead=true
+	_reset_attack()
 
 func _set_diamonds(d):
 	var prevd=diamonds
@@ -351,18 +356,14 @@ func _set_health(h):
 	health= clamp(h,0,4)
 	if health!=prevh:
 		emit_signal("health_updated",health)
-		if health==0:
-			_die()
-		else:
-			hurtable=false
-			$HurtAnimation.play("Hurt")
-
+	if health==0:
+		_die()
+	else:
+		hurtable=false
+		$HurtAnimation.play("Hurt")
 
 func _on_HurtAnimation_animation_finished(anim_name):
 	hurtable=true
 
-func _input(event):
-	if event.is_action_released("ui_focus_next"):
-		_set_diamonds(diamonds+1)
-	elif event.is_action_released("ui_focus_prev"):
-		_set_diamonds(diamonds-1)
+func _on_downTimer_timeout():
+	motion.y+=800

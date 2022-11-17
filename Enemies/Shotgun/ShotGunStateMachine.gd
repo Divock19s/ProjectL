@@ -21,75 +21,80 @@ func _state_logic(delta):
 			call_deferred("_set_state",states.Fale)
 		parent._move()
 		if parent.turn and (parent._back() or parent._floor() or parent.is_on_wall()):
-			parent._turn(-parent.direction)
+			if !parent.player.dead:
+				parent._turn(-parent.direction)
 	elif state==states.Detect:
 		if parent.fale:
 			call_deferred("_set_state",states.Fale)
 		parent._move()
 	parent._physics(delta)
 func _get_transition(_delta):
-	match state:
-		states.Patrol:
-			if parent._front():
-				if parent._detect()==1:
+	if parent.player.dead:
+		if state!=states.Patrol:
+			return states.Patrol
+	else:
+		match state:
+			states.Patrol:
+				if parent._front():
+					if parent._detect()==1:
+						return states.Shoot
+					elif parent._detect()==2:
+						return states.Close
+				if !parent.is_on_floor() and parent.motion.y>1:
+					return states.Fall
+				elif parent.hurt:
+					return states.Hurt
+				elif parent.fale:
+					return states.Fale
+			states.Detect:
+				if !parent.detect or parent._detect()==3:
+					return states.Patrol
+				elif parent.attack:
 					return states.Shoot
+				elif !parent.is_on_floor():
+					if parent.motion.y>1:
+						return states.FallDetect
 				elif parent._detect()==2:
 					return states.Close
-			if !parent.is_on_floor() and parent.motion.y>1:
-				return states.Fall
-			elif parent.hurt:
-				return states.Hurt
-			elif parent.fale:
-				return states.Fale
-		states.Detect:
-			if !parent.detect or parent._detect()==3:
-				return states.Patrol
-			elif parent.attack:
-				return states.Shoot
-			elif !parent.is_on_floor():
-				if parent.motion.y>1:
-					return states.FallDetect
-			elif parent._detect()==2:
-				return states.Close
-			elif parent.fale:
-				return states.Fale
-		states.FallDetect:
-			if!parent.detect:
-				return states.Fall
-			elif parent.is_on_floor():
-				if parent.motion.y==1:
-					return states.Detect
-		states.Fall:
-			if parent.is_on_floor():
-				return states.Patrol
-		states.Close:
-			if parent.attack:
-				return states.Shoot
-			elif parent._detect()!=2:
-				return states.Patrol
-			elif parent.fale:
-				return states.Fale
-		states.Fale:
-			if !parent.fale:
-				return states.Stand
-		states.Stand:
-			if !parent.stand:
-				return states.Patrol
-		states.Hurt:
-			if !parent.hurt:
-				if parent.is_on_floor():
-					parent.fale=false
-					return states.Patrol
-				else:
+				elif parent.fale:
+					return states.Fale
+			states.FallDetect:
+				if!parent.detect:
 					return states.Fall
-		states.Shoot:
-			if !parent.battack:
-				if parent._detect()==2:
-					return states.Close
-				else: return states.Detect
-			elif parent.fale:
-				parent.BulletTimer.stop()
-				return states.Fale
+				elif parent.is_on_floor():
+					if parent.motion.y==1:
+						return states.Detect
+			states.Fall:
+				if parent.is_on_floor():
+					return states.Patrol
+			states.Close:
+				if parent.attack:
+					return states.Shoot
+				elif parent._detect()!=2:
+					return states.Patrol
+				elif parent.fale:
+					return states.Fale
+			states.Fale:
+				if !parent.fale:
+					return states.Stand
+			states.Stand:
+				if !parent.stand:
+					return states.Patrol
+			states.Hurt:
+				if !parent.hurt:
+					if parent.is_on_floor():
+						parent.fale=false
+						return states.Patrol
+					else:
+						return states.Fall
+			states.Shoot:
+				if !parent.battack:
+					if parent._detect()==2:
+						return states.Close
+					else: return states.Detect
+				elif parent.fale:
+					parent.BulletTimer.stop()
+					return states.Fale
 	return null
 func _enter_state(new_state,old_state):
 	match state:

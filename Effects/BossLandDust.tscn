@@ -28,6 +28,7 @@ animations = [ {
 } ]
 
 [node name="WalkDust" type="AnimatedSprite"]
+z_index = 7
 frames = SubResource( 6 )
 animation = "def"
 script = ExtResource( 2 )

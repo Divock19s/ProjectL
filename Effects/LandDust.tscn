@@ -29,6 +29,7 @@ animations = [ {
 
 [node name="WalkDust" type="AnimatedSprite"]
 position = Vector2( -20, 0 )
+z_index = 5
 frames = SubResource( 6 )
 animation = "def"
 centered = false
