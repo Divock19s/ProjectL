@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal health_updated(health)
+
 var detect=false
 var attack=false
 var battack=false
@@ -11,7 +13,8 @@ var stand=false
 
 export (int) var direction = 1
 
-var health=100
+var max_health = 40
+var health = max_health setget _set_health
 var speed = 20
 var gravity = 500
 var failDirection =1
@@ -32,6 +35,11 @@ onready var wallTimer=$WallTimer
 onready var sprite=$Sprite
 onready var hitShape2=$Collide/CollisionShape2D
 
+func _reset():
+	hitShape2.set_deferred("disabled",true)
+	BulletTimer.stop()
+	FailTimer.stop()
+
 func _ready():
 	sprite.position.y=-10
 	_turn(direction)
@@ -44,19 +52,26 @@ func _shoot():
 func _hurt(type="fail",direct=0,damage=0,x=0,y=0):
 	hitShape2.set_deferred("disabled",true)
 	if type=="fail":
-		fale=true
-		$HurtTimer.stop()
-		failDirection=direct
+		if !fale:
+			fale=true
+			$HurtTimer.stop()
+			failDirection=direct
 	else:
 		if !fale:
 			$HurtTimer.start()
-		hurt=true
-		_knock_up(y)
-		_knock(x,direct)
-		health-=damage
-		health=clamp(health,0,100)
+			_knock_up(y)
+			_knock(x,direct)
+			hurt=true
+		_set_health(health-damage)
 	if direct==direction:
 		_turn(1)
+func _set_health(h):
+	var prevh=health
+	health= clamp(h,0,max_health)
+	if health!=prevh:
+		emit_signal("health_updated",health)
+	if health==0:
+		dead=true
 
 func _knock_up(amount):
 	motion.y=0
@@ -128,6 +143,9 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		stand=false
 	elif anim_name=="StandBack":
 		stand=false
+	elif anim_name=="Die":
+		player._diamond()
+		call_deferred("queue_free")
 
 
 func _on_WallTimer_timeout():

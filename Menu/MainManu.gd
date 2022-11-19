@@ -8,7 +8,8 @@ var states={"main":1, "options":2 , "controls":3}
 var controls={"control1":1, "control2":2 , "control3":3}
 var control
 func _ready():
-	OS.window_fullscreen=$Options/VBoxContainer2/FullScreen.pressed
+	$Options/VBoxContainer2/FullScreen.pressed=Global.FullScreen
+	OS.window_fullscreen=Global.FullScreen
 	$Label.visible=false
 	$Label2.visible=false
 	$Menu/VBoxContainer/Resume.grab_focus()
@@ -120,7 +121,7 @@ func _tweenRight(objectt,destin):
 
 func _on_Resume_pressed():
 	if state==states.main:
-		pass
+		var _k = get_tree().change_scene("res://Story.tscn")
 
 
 func _on_Reset_pressed():
@@ -141,6 +142,7 @@ func _on_Quit_pressed():
 func _on_FullScreen_pressed():
 	if state==states.options:
 		OS.window_fullscreen=$Options/VBoxContainer2/FullScreen.pressed
+		Global.FullScreen=$Options/VBoxContainer2/FullScreen.pressed
 
 
 func _on_Music_pressed():

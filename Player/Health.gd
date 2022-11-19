@@ -25,6 +25,22 @@ onready var hF=$Control/Health_Frequency
 onready var dD=$Diamonds/Diamond_Duration
 onready var dF=$Diamonds/Diamond_Frequency 
 
+func _ready():
+		if Global.diamonds==0:
+			return
+		if Global.diamonds>=1:
+			diamond1.frame=0
+		if Global.diamonds>=2:
+			diamond2.frame=0
+		if Global.diamonds>=3:
+			diamond3.frame=0
+		if Global.diamonds>=4:
+			diamond4.frame=0
+		if Global.diamonds>=5:
+			diamond5.frame=0
+		if Global.diamonds>=6:
+			diamond6.frame=0
+
 func _diamond_start(sprite):
 	dD.wait_time=0.2
 	dF.wait_time=0.05
@@ -180,3 +196,5 @@ func _on_Player_diamonds_updated(diamonds,dir):
 		diamond5.frame=0
 		diamond6.frame=0
 	_diamond_start(diamond)
+
+

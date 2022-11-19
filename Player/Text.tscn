@@ -57,7 +57,7 @@ margin_bottom = -120.0
 
 [node name="Sprite" type="AnimatedSprite" parent="Control"]
 frames = SubResource( 9 )
-frame = 1
+frame = 5
 playing = true
 
 [node name="Label" type="Label" parent="Control"]

@@ -12,20 +12,24 @@ func _ready():
 	_add_state("Fall")
 	call_deferred("_set_state",states.Patrol)
 func _state_logic(delta):
-	if parent.hurt:
-		if state!=states.Hurt:
-			call_deferred("_set_state",states.Hurt)
-	if state==states.Patrol :
-		if parent.fale:
-			call_deferred("_set_state",states.Fale)
-		parent._move()
-		if parent.turn and (parent._back() or parent._floor() or parent.is_on_wall()):
-			if !parent.player.dead:
-				parent._turn(-parent.direction)
-	elif state==states.Detect:
-		if parent.fale:
-			call_deferred("_set_state",states.Fale)
-		parent._move()
+	if parent.dead:
+		if state!=states.Dead:
+			_set_state(states.Dead)
+	else:
+		if parent.hurt:
+			if state!=states.Hurt:
+				call_deferred("_set_state",states.Hurt)
+		if state==states.Patrol :
+			if parent.fale:
+				call_deferred("_set_state",states.Fale)
+			parent._move()
+			if parent.turn and (parent._back() or parent._floor() or parent.is_on_wall()):
+				if !parent.player.dead:
+					parent._turn(-parent.direction)
+		elif state==states.Detect:
+			if parent.fale:
+				call_deferred("_set_state",states.Fale)
+			parent._move()
 	parent._physics(delta)
 func _get_transition(_delta):
 	if parent.player.dead:
@@ -85,6 +89,10 @@ func _get_transition(_delta):
 func _enter_state(new_state,old_state):
 	parent.hitShape.set_deferred("disabled",true)
 	match state:
+		states.Dead:
+			parent._reset()
+			parent.motion.x=0
+			parent.animation.play("Die")
 		states.Patrol:
 			parent.speed = 20
 			parent.animation.play("Walk")
@@ -105,7 +113,6 @@ func _enter_state(new_state,old_state):
 			parent.attack=true
 			parent.animation.play("Attack")
 		states.Fale:
-			print("working")
 			parent.hitShape2.set_deferred("disabled",true)
 			parent.motion.x=0
 			if parent.failDirection==parent.direction:

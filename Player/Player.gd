@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 signal health_updated(health)
 signal diamonds_updated(diamonds,dir)
+signal death()
 
 var wallSpeed = 150
 var walkSpeed = 50
@@ -288,6 +289,8 @@ func _on_pAnimation_animation_finished(anim_name):
 		downKick=false
 	elif anim_name == "Shoot":
 		shoot=false
+	elif anim_name =="Death":
+		emit_signal("death")
 
 func _on_Kick_body_entered(body):
 	_ImpactDust(kickShape.global_position,1,1,0,199,255,false)
@@ -296,7 +299,7 @@ func _on_Kick_body_entered(body):
 			body._hurt("fail",dashDirection,0,0,0)
 		elif dash:
 			_knock(25,-dashDirection)
-			body._hurt("Attack",dashDirection,50,50,70)
+			body._hurt("Attack",dashDirection,30,50,70)
 		elif kick:
 			_knock(25,-dashDirection)
 			body._hurt("Attack",dashDirection,15,40,50)
@@ -310,7 +313,7 @@ func _on_Down_body_entered(body):
 	_knock_up(200)
 	if !spawned:
 		if body.is_in_group("enemies"):
-			body._hurt("Attack",dashDirection,50,0,0)
+			body._hurt("Attack",dashDirection,30,0,0)
 		_ImpactDust(downShape.global_position,1.5,1.5,0,199,255,true)
 		spawned = true
 
@@ -341,6 +344,9 @@ func _die():
 	get_parent().add_child(r)
 	dead=true
 	_reset_attack()
+
+func _diamond():
+	_set_diamonds(diamonds-1)
 
 func _set_diamonds(d):
 	var prevd=diamonds

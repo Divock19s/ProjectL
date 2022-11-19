@@ -1,11 +1,15 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Enemies/Shotgun/ShotGunStateMachine.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/Shotgun/Shotgun.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Enemies/sEnemy-Sheet.png" type="Texture" id=3]
+[ext_resource path="res://GUI/HealthBar.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 5, 7 )
+
+[sub_resource type="RectangleShape2D" id=15]
+extents = Vector2( 4, 6 )
 
 [sub_resource type="Animation" id=9]
 resource_name = "Attack"
@@ -303,9 +307,6 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="RectangleShape2D" id=15]
-extents = Vector2( 4, 6 )
-
 [node name="Shotgun" type="KinematicBody2D" groups=["enemies"]]
 collision_layer = 2
 collision_mask = 0
@@ -320,19 +321,6 @@ shape = SubResource( 1 )
 position = Vector2( 0, -10 )
 texture = ExtResource( 3 )
 hframes = 25
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Attack = SubResource( 9 )
-anims/Close = SubResource( 14 )
-anims/Die = SubResource( 10 )
-anims/Fall = SubResource( 11 )
-anims/FallBack = SubResource( 4 )
-anims/FallFront = SubResource( 6 )
-anims/Hurt = SubResource( 7 )
-anims/RESET = SubResource( 2 )
-anims/StandBack = SubResource( 12 )
-anims/StandFront = SubResource( 13 )
-anims/Walk = SubResource( 3 )
 
 [node name="ShotGunStateMachine" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -384,7 +372,27 @@ shape = SubResource( 15 )
 [node name="HurtTimer" type="Timer" parent="."]
 one_shot = true
 
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[node name="HealthBar" parent="." instance=ExtResource( 4 )]
+margin_left = -9.0
+margin_top = -20.0
+margin_right = 31.0
+margin_bottom = 20.0
+rect_scale = Vector2( 0.5, 0.5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Attack = SubResource( 9 )
+anims/Close = SubResource( 14 )
+anims/Die = SubResource( 10 )
+anims/Fall = SubResource( 11 )
+anims/FallBack = SubResource( 4 )
+anims/FallFront = SubResource( 6 )
+anims/Hurt = SubResource( 7 )
+anims/RESET = SubResource( 2 )
+anims/StandBack = SubResource( 12 )
+anims/StandFront = SubResource( 13 )
+anims/Walk = SubResource( 3 )
+
+[connection signal="health_updated" from="." to="HealthBar" method="_on_health_updated"]
 [connection signal="timeout" from="DetectTimer" to="." method="_on_DetectTimer_timeout"]
 [connection signal="timeout" from="FailTimer" to="." method="_on_FailTimer_timeout"]
 [connection signal="timeout" from="WallTimer" to="." method="_on_WallTimer_timeout"]
@@ -392,3 +400,4 @@ one_shot = true
 [connection signal="timeout" from="BulletTimer" to="." method="_on_BulletTimer_timeout"]
 [connection signal="body_entered" from="Collide" to="." method="_on_Collide_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_HurtTimer_timeout"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

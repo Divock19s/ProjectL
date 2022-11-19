@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal health_updated(health)
+
 var shoot=false
 var attack=false
 var battack=true
@@ -12,9 +14,10 @@ var jamp=false
 var tim=true
 var transit=true
 
+var max_health=2000
+var health = max_health setget _set_health
 var dira = -1
 var jumpCount=0
-var health=20
 var speed = 50
 var gravity = 500
 var jump = -400
@@ -47,6 +50,9 @@ onready var hitShape2=$Collide/CollisionShape2D
 onready var attackArea=$Area2D/CollisionShape2D
 onready var attackArea2d=$Area2D
 
+func _ready():
+	emit_signal("health_updated",health)
+
 func _shoot(os):
 	var b=bullet.instance()
 	b.global_position=os.global_position
@@ -71,10 +77,16 @@ func _hurt(type,direct,damage,x,y):
 	if type!="fail":
 		_shak(0.2,10,5,1)
 		hurt=true
-		health-=damage
-		health=clamp(health,0,1000)
+		_set_health(health-damage)
 		motion.x=0
 		$HurtAnimation.play("Hurt")
+func _set_health(h):
+	var prevh=health
+	health= clamp(h,0,max_health)
+	if health!=prevh:
+		emit_signal("health_updated",health)
+	if health==0:
+		dead=true
 
 func _move():
 	motion.x+=speed*-direction
