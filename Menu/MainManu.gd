@@ -7,7 +7,20 @@ var state
 var states={"main":1, "options":2 , "controls":3}
 var controls={"control1":1, "control2":2 , "control3":3}
 var control
+
+func _input(event):
+	if !$AudioStreamPlayer2.playing and !(event is InputEventMouseMotion):
+			$AudioStreamPlayer2.play()
+	if event.is_action_pressed("one"):
+		Global.maps=("res://Maps/Map1.tscn")
+	if event.is_action_pressed("two"):
+		Global.maps=("res://Maps/Map2.tscn")
+	if event.is_action_pressed("three"):
+		Global.maps=("res://Maps/Map3.tscn")
+
 func _ready():
+	$AudioStreamPlayer.play()
+	MusicPlayer.music=false
 	$Options/VBoxContainer2/FullScreen.pressed=Global.FullScreen
 	OS.window_fullscreen=Global.FullScreen
 	$Label.visible=false
@@ -21,6 +34,8 @@ func _ready():
 	control=controls.control1
 
 func _process(_delta):
+	if !$AudioStreamPlayer.playing :
+		$AudioStreamPlayer.play()
 	match state:
 		states.main:
 			if $Label.visible:
@@ -121,7 +136,8 @@ func _tweenRight(objectt,destin):
 
 func _on_Resume_pressed():
 	if state==states.main:
-		var _k = get_tree().change_scene("res://Story.tscn")
+		var _k = get_tree().change_scene(Global.maps)
+		MusicPlayer.music=$Options/VBoxContainer2/Music.pressed
 
 
 func _on_Reset_pressed():
@@ -143,12 +159,6 @@ func _on_FullScreen_pressed():
 	if state==states.options:
 		OS.window_fullscreen=$Options/VBoxContainer2/FullScreen.pressed
 		Global.FullScreen=$Options/VBoxContainer2/FullScreen.pressed
-
-
-func _on_Music_pressed():
-	if state==states.options:
-		pass
-
 
 func _on_Support_pressed():
 	if state==states.options:

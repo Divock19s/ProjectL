@@ -32,6 +32,10 @@ onready var FailTimer=$FailTimer
 onready var wallTimer=$WallTimer
 onready var sprite=$Sprite
 
+onready var hitSound=$Hit
+onready var hurtSound=$Hurt
+onready var deadSound=$Dead
+
 func _ready():
 	sprite.position.y=-10
 	hitShape.set_deferred("disabled",true)
@@ -52,6 +56,7 @@ func _hurt(type="fail",direct=0,damage=0,x=0,y=0):
 			$HurtTimer.stop()
 			failDirection=direct
 	else:
+		hurtSound.play()
 		if !fale:
 			$HurtTimer.start()
 			_knock_up(y)
@@ -66,6 +71,7 @@ func _set_health(h):
 	if health!=prevh:
 		emit_signal("health_updated",health)
 	if health==0:
+		deadSound.play()
 		dead=true
 func _knock_up(amount):
 	motion.y=0
@@ -150,6 +156,7 @@ func _on_FailTimer_timeout():
 
 func _on_Collide_body_entered(body):
 	if "Player" in body.name:
+		hitSound.play()
 		hitShape2.set_deferred("disabled",true)
 		body._kill(direction,1,50)
 		$HurtTimer.start()
@@ -157,6 +164,7 @@ func _on_Collide_body_entered(body):
 
 func _on_Area2D_body_entered(body):
 	if "Player" in body.name:
+		hitSound.play()
 		body._kill(direction,1,50)
 
 

@@ -99,6 +99,9 @@ func _state_logic(delta):
 		if [states.Idle,states.Run,states.Crouch,states.Stealth].has(state):
 			if parent.dashable==false:
 				parent.dashable=true
+			if state==states.Run:
+				if !parent.footSound.playing:
+					parent.footSound.play()
 			if direction !=0:
 				parent.side=direction
 			parent._walk(direction)
@@ -263,6 +266,7 @@ func _get_transition(delta):
 func _enter_state(new_state,old_state):
 	match state:
 		states.Idle:
+			parent.footSound.stop()
 			parent.dowcount=1
 			parent.plAnimation.play("Idle")
 		states.Run:
@@ -271,41 +275,60 @@ func _enter_state(new_state,old_state):
 			parent.runDustTimer.start()
 			parent.plAnimation.play("Run")
 		states.Fall:
+			parent.footSound.stop()
 			parent.plAnimation.play("Fall")
 		states.Jump:
+			parent.footSound.stop()
+			parent.jumpSound.play()
 			if [states.Idle,states.Run].has(old_state):
 				parent.squash.play("Jump")
 				parent._JumpDust()
 			parent.plAnimation.play("Jump")
 		states.DoubleJump:
+			parent.doubleJumpSound.play()
 			parent.plAnimation.play("DoubleJump")
 		states.WallSlide:
+			parent.footSound.stop()
 			parent.wallDustTimer.start()
 			parent.plAnimation.play("WallSlide")
 		states.Crouch:
+			parent.footSound.stop()
 			parent.plAnimation.play("Crouch")
 		states.Stealth:
+			parent.footSound.stop()
 			parent.plAnimation.play("Stealth")
 		states.Dash:
+			parent.footSound.stop()
+			parent.dashSound.play()
 			parent._DashEffect()
 			parent.dashEffectTimer.start()
 			parent.plAnimation.play("AirKick")
 		states.Slide:
+			parent.footSound.stop()
+			parent.slideSound.play()
 			parent.kickShape.set_deferred("disabled",false)
 			parent._SlideDust()
 			parent.slideDustTimer.start()
 			parent.plAnimation.play("Slide")
 		states.Kick:
+			parent.footSound.stop()
+			parent.attackSound.play()
 			if parent.motion.x!=0:
 				parent.plAnimation.play("AirKick")
 			else:
 				parent.plAnimation.play("Kick")
 		states.DownKick:
+			parent.downSound.play()
+			parent.attackSound.play()
 			parent.downTimer.start()
 			parent.plAnimation.play("DownKick")
 		states.Shoot:
+			parent.footSound.stop()
+			parent.attackSound.play()
+			parent.shootSound.play()
 			parent.plAnimation.play("Shoot")
 		states.Dead:
+			parent.footSound.stop()
 			parent.motion.x=0
 			parent.plAnimation.play("Death")
 
@@ -320,11 +343,13 @@ func _exit_state(old_state,new_state):
 			parent.runDustTimer.stop()
 		states.Fall:
 			if [states.Idle,states.Run].has(new_state):
+				parent.landSound.play()
 				parent.squash.play("Land")
 				parent._LandDust()
 		states.DoubleJump:
 			parent.sprite.rotation_degrees=0
 			if [states.Idle,states.Run].has(new_state):
+				parent.landSound.play()
 				parent.squash.play("Land")
 				parent._LandDust()
 		states.Slide:
@@ -333,3 +358,5 @@ func _exit_state(old_state,new_state):
 		states.Dash:
 			parent.motion.x=clamp(parent.motion.x,-parent.walkSpeed,parent.walkSpeed)
 			parent.dashEffectTimer.stop()
+		states.Run:
+			parent.footSound.stop()

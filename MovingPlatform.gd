@@ -17,6 +17,5 @@ func _init_tween():
 func _physics_process(delta):
 	$Platform.position = $Platform.position.linear_interpolate(follow,0.075)
 
-
 func _on_Tween_tween_all_completed():
 	_init_tween()

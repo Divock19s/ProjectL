@@ -47,6 +47,7 @@ func _enter_state(new_state,old_state):
 	_phases()
 	match state:
 		states.Transition:
+			parent.transitionSound.play()
 			parent._shak(0.5,20,10,3)
 			parent.motion.x=0
 			parent.transit=true
@@ -95,6 +96,8 @@ func _enter_state(new_state,old_state):
 			parent.wallTimer.start()
 			parent.animation.play("Move")
 		states.Jump:
+			parent.fireSound.play()
+			parent.jumpSound.play()
 			parent.jumpCount+=1
 			parent._target()
 			parent.jumpp=true
@@ -103,6 +106,7 @@ func _enter_state(new_state,old_state):
 func _exit_state(old_state,new_state):
 	match old_state:
 		states.Jump:
+			parent.landSound.play()
 			parent._shak(0.2,20,10,4)
 			parent._ladDust()
 		states.Charge:

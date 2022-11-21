@@ -6,6 +6,7 @@
 
 [node name="Text1" type="Area2D"]
 script = ExtResource( 1 )
+tex = [ "" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2( 10.5794, 4.03216 )

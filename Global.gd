@@ -1,9 +1,10 @@
 extends Node
-var diamonds = 6
+var diamonds = 4
 var health = 4
 var progress=0
 var FullScreen=true
-var maps="res://Maps/Map1.tscn"
+var dead=false
+var maps="res://Story.tscn"
 func _ready():
 	pass # Replace with function body.
 

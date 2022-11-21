@@ -36,6 +36,7 @@ var canDash=true
 var canWallJump=true
 var canShoot=true
 var canDownKick=true
+var ready = false
 
 onready var sprite=$Sprite
 onready var plAnimation=$pAnimation
@@ -54,6 +55,21 @@ onready var camera=$Camera2D
 onready var shake=$Camera2D/Tween
 onready var squash=$Squash
 
+onready var shootSound=$Shoot2
+onready var attackSound=$Attack
+onready var dashSound=$Dash
+onready var deathSound=$Death
+onready var downSound=$Down2
+onready var footSound=$FootStep
+onready var hitSound=$Hit
+onready var hurtSound=$Hurt
+onready var jumpSound=$Jump
+onready var doubleJumpSound=$DoubleJump
+onready var getDiamond=$GetDiamond
+onready var looseDiamone=$LooseDiamond
+onready var landSound=$Land
+onready var slideSound=$Slide
+
 onready var bullet=preload("res://Player/Bullet.tscn")
 onready var RunDust=preload("res://Effects/WalkDust.tscn")
 onready var ImpactDust=preload("res://Effects/ImpactDust.tscn")
@@ -70,6 +86,8 @@ func _ready():
 	_set_health(health)
 	_set_diamonds(diamonds)
 	_reset_attack()
+	$Ready.start()
+	Global.dead=false
 
 func _kill(dir,amm,kno):
 		if hurtable:
@@ -290,10 +308,12 @@ func _on_pAnimation_animation_finished(anim_name):
 	elif anim_name == "Shoot":
 		shoot=false
 	elif anim_name =="Death":
+		Global.dead=true
 		emit_signal("death")
 
 func _on_Kick_body_entered(body):
 	_ImpactDust(kickShape.global_position,1,1,0,199,255,false)
+	hitSound.play()
 	if body.is_in_group("enemies"):
 		if !slideable:
 			body._hurt("fail",dashDirection,0,0,0)
@@ -311,6 +331,7 @@ func _on_Down_body_entered(body):
 	downTimer.stop()
 	motion.y=0
 	_knock_up(200)
+	hitSound.play()
 	if !spawned:
 		if body.is_in_group("enemies"):
 			body._hurt("Attack",dashDirection,30,0,0)
@@ -353,16 +374,22 @@ func _set_diamonds(d):
 	diamonds= clamp(d,0,6)
 	if diamonds!=prevd:
 		if diamonds-prevd<0:
+			if ready:
+				looseDiamone.play()
 			emit_signal("diamonds_updated",diamonds,-1)
 		elif diamonds-prevd>0:
+			if ready:
+				getDiamond.play()
 			emit_signal("diamonds_updated",diamonds,1)
 
 func _set_health(h):
 	var prevh=health
 	health= clamp(h,0,4)
 	if health!=prevh:
+		hurtSound.play()
 		emit_signal("health_updated",health)
 	if health==0:
+		deathSound.play()
 		_die()
 	else:
 		hurtable=false
@@ -373,3 +400,13 @@ func _on_HurtAnimation_animation_finished(anim_name):
 
 func _on_downTimer_timeout():
 	motion.y+=800
+
+
+func _on_Ready_timeout():
+	ready=true
+
+
+func _on_Area2D_body_entered(body):
+	if !("Player" in body.name) and !body.is_in_group("enemies"):
+		deathSound.play()
+		_die()

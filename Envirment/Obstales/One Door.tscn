@@ -1,13 +1,10 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Assets/Envirment/Handle-Sheet.png" type="Texture" id=1]
-[ext_resource path="res://Assets/Envirment/Door-Sheet.png" type="Texture" id=2]
+[ext_resource path="res://Envirment/Obstales/Door.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Envirment/Obstales/One Door.gd" type="Script" id=3]
 [ext_resource path="res://Envirment/Obstales/Handle.gd" type="Script" id=4]
-[ext_resource path="res://Envirment/Obstales/Door.gd" type="Script" id=5]
-
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 2, 11 )
+[ext_resource path="res://Assets/Sounds/Obstacles/Lever.wav" type="AudioStream" id=6]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 3.5, 1.5 )
@@ -136,25 +133,12 @@ tracks/1/keys = {
 z_index = -2
 script = ExtResource( 3 )
 
-[node name="Door" type="StaticBody2D" parent="." groups=["enemies"]]
-position = Vector2( 10, 0 )
-collision_layer = 3
-collision_mask = 3
-script = ExtResource( 5 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Door"]
-position = Vector2( -8, -11 )
-shape = SubResource( 1 )
-
-[node name="Sprite" type="Sprite" parent="Door"]
-position = Vector2( -3.5, -11 )
-texture = ExtResource( 2 )
-hframes = 4
+[node name="Door" parent="." instance=ExtResource( 2 )]
 
 [node name="Handle" type="StaticBody2D" parent="." groups=["enemies"]]
 position = Vector2( -10, 0 )
-collision_layer = 3
-collision_mask = 3
+collision_layer = 2
+collision_mask = 2
 script = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Handle"]
@@ -170,5 +154,9 @@ animation = "Open"
 anims/Close = SubResource( 10 )
 anims/Open = SubResource( 11 )
 anims/RESET = SubResource( 12 )
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+volume_db = -20.0
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

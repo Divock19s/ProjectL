@@ -13,16 +13,16 @@ func _ready():
 		
 
 func _open():
-	if work:
-		if open:
-			$AnimationPlayer.play("Close")
-			$Handle/AnimatedSprite.play("Close")
-			open=false
-		else:
-			$AnimationPlayer.play("Open")
-			$Handle/AnimatedSprite.play("Open")
-			open=true
-		work = false
+	$AudioStreamPlayer2.play()
+	if open:
+		$AnimationPlayer.play("Close")
+		$Handle/AnimatedSprite.play("Close")
+		open=false
+	else:
+		$AnimationPlayer.play("Open")
+		$Handle/AnimatedSprite.play("Open")
+		open=true
+	work = false
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):

@@ -1,9 +1,12 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Enemies/Shotgun/ShotGunStateMachine.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/Shotgun/Shotgun.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Enemies/sEnemy-Sheet.png" type="Texture" id=3]
 [ext_resource path="res://GUI/HealthBar.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/Sounds/Enemies/Dead.wav" type="AudioStream" id=5]
+[ext_resource path="res://Assets/Sounds/Enemies/Hit.wav" type="AudioStream" id=6]
+[ext_resource path="res://Assets/Sounds/Enemies/Hurt.wav" type="AudioStream" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 5, 7 )
@@ -308,6 +311,7 @@ tracks/0/keys = {
 }
 
 [node name="Shotgun" type="KinematicBody2D" groups=["enemies"]]
+z_index = -1
 collision_layer = 2
 collision_mask = 0
 script = ExtResource( 2 )
@@ -391,6 +395,18 @@ anims/RESET = SubResource( 2 )
 anims/StandBack = SubResource( 12 )
 anims/StandFront = SubResource( 13 )
 anims/Walk = SubResource( 3 )
+
+[node name="Hit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+volume_db = -20.0
+
+[node name="Hurt" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+volume_db = -20.0
+
+[node name="Dead" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+volume_db = -20.0
 
 [connection signal="health_updated" from="." to="HealthBar" method="_on_health_updated"]
 [connection signal="timeout" from="DetectTimer" to="." method="_on_DetectTimer_timeout"]

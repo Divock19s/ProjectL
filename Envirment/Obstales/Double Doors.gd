@@ -17,6 +17,7 @@ func _ready():
 		
 
 func _open():
+	$AudioStreamPlayer2.play()
 	if work:
 		if open:
 			$AnimationPlayer.play("Close")

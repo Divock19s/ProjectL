@@ -6,6 +6,7 @@ var direction = 1
 
 func _ready():
 	$Timer.start()
+	$AudioStreamPlayer.play()
 
 func _process(delta):
 	position.x+=direction*speed*delta

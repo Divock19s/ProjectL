@@ -3,7 +3,10 @@ extends Control
 func _ready():
 	visible=false
 func _input(event):
-	if event.is_action_pressed("pause"):
+	if visible:
+		if ! $AudioStreamPlayer.playing and !(event is InputEventMouseMotion):
+			$AudioStreamPlayer.play()
+	if event.is_action_pressed("pause") and !Global.dead:
 		get_tree().paused=!get_tree().paused
 		if get_tree().paused:
 			visible=true
@@ -21,4 +24,5 @@ func _on_Map_pressed():
 
 
 func _on_Quit_pressed():
-	get_tree().quit()
+	get_tree().paused=false
+	var _k = get_tree().change_scene("res://Menu/MainManu.tscn")

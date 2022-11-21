@@ -35,6 +35,10 @@ onready var wallTimer=$WallTimer
 onready var sprite=$Sprite
 onready var hitShape2=$Collide/CollisionShape2D
 
+onready var hitSound=$Hit
+onready var hurtSound=$Hurt
+onready var deadSound=$Dead
+
 func _reset():
 	hitShape2.set_deferred("disabled",true)
 	BulletTimer.stop()
@@ -69,8 +73,10 @@ func _set_health(h):
 	var prevh=health
 	health= clamp(h,0,max_health)
 	if health!=prevh:
+		hurtSound.play()
 		emit_signal("health_updated",health)
 	if health==0:
+		deadSound.play()
 		dead=true
 
 func _knock_up(amount):
@@ -166,6 +172,7 @@ func _on_BulletTimer_timeout():
 
 func _on_Collide_body_entered(body):
 	if "Player" in body.name:
+		hitSound.play()
 		hitShape2.set_deferred("disabled",true)
 		body._kill(direction,1,50)
 		$HurtTimer.start()

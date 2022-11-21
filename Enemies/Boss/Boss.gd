@@ -14,7 +14,7 @@ var jamp=false
 var tim=true
 var transit=true
 
-var max_health=2000
+var max_health=20
 var health = max_health setget _set_health
 var dira = -1
 var jumpCount=0
@@ -50,6 +50,14 @@ onready var hitShape2=$Collide/CollisionShape2D
 onready var attackArea=$Area2D/CollisionShape2D
 onready var attackArea2d=$Area2D
 
+onready var deadSound=$Dead2
+onready var fireSound=$Fire2
+onready var hurtSound=$Hurt
+onready var jumpSound=$Jump
+onready var shootSound=$Shoot
+onready var transitionSound=$Transition
+onready var landSound=$Land
+
 func _ready():
 	emit_signal("health_updated",health)
 
@@ -84,8 +92,10 @@ func _set_health(h):
 	var prevh=health
 	health= clamp(h,0,max_health)
 	if health!=prevh:
+		hurtSound.play()
 		emit_signal("health_updated",health)
 	if health==0:
+		deadSound.play()
 		dead=true
 
 func _move():
@@ -169,6 +179,7 @@ func _on_ShootTimer_timeout():
 	shoot=true
 
 func _on_BulletTimer_timeout():
+	shootSound.play()
 	_shoot(Spos)
 	_shoot(Spos2)
 	_shoot(Spos3)
