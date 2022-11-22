@@ -684,7 +684,7 @@ wait_time = 0.4
 one_shot = true
 
 [node name="wSlideTimer" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.05
 one_shot = true
 
 [node name="RunDustTimer" type="Timer" parent="."]
@@ -727,11 +727,12 @@ volume_db = -20.0
 
 [node name="Shoot2" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 19 )
-volume_db = -10.0
+volume_db = -20.0
 pitch_scale = 4.0
 
 [node name="Dash" type="AudioStreamPlayer" parent="."]
 stream = SubResource( 42 )
+volume_db = -20.0
 
 [node name="Death" type="AudioStreamPlayer" parent="."]
 stream = SubResource( 43 )
@@ -744,7 +745,7 @@ pitch_scale = 3.0
 
 [node name="FootStep" type="AudioStreamPlayer" parent="."]
 stream = SubResource( 45 )
-volume_db = -20.0
+volume_db = -30.0
 
 [node name="Hit" type="AudioStreamPlayer" parent="."]
 stream = SubResource( 46 )
@@ -752,11 +753,11 @@ volume_db = -20.0
 
 [node name="Hurt" type="AudioStreamPlayer" parent="."]
 stream = SubResource( 47 )
-volume_db = -20.0
+volume_db = -30.0
 
 [node name="Jump" type="AudioStreamPlayer" parent="."]
 stream = SubResource( 48 )
-volume_db = -20.0
+volume_db = -40.0
 
 [node name="Land" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 12 )
@@ -764,7 +765,7 @@ volume_db = -20.0
 
 [node name="Slide" type="AudioStreamPlayer" parent="."]
 stream = SubResource( 50 )
-volume_db = -20.0
+volume_db = -30.0
 
 [node name="GetDiamond" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 10 )

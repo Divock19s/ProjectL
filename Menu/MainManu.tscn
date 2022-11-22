@@ -116,7 +116,7 @@ script = ExtResource( 4 )
 scale = Vector2( 10, 10 )
 z_index = -1
 frames = SubResource( 9 )
-frame = 4
+frame = 3
 playing = true
 centered = false
 
@@ -326,4 +326,5 @@ pitch_scale = 0.25
 [connection signal="pressed" from="Menu/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]
 [connection signal="pressed" from="Options/VBoxContainer2/Controls" to="." method="_on_Controls_pressed"]
 [connection signal="pressed" from="Options/VBoxContainer2/FullScreen" to="." method="_on_FullScreen_pressed"]
+[connection signal="pressed" from="Options/VBoxContainer2/Music" to="." method="_on_Music_pressed"]
 [connection signal="pressed" from="Options/VBoxContainer2/Support" to="." method="_on_Support_pressed"]

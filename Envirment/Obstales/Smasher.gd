@@ -24,6 +24,9 @@ func _on_Detect_body_entered(body):
 func _on_Hit_body_entered(body):
 	if "Player" in body.name:
 		body._kill(sign(body.global_position.x-global_position.x),2,50)
+	if body.is_in_group("enemies"):
+		if body.has_method("_piece"):
+			body._piece()
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):

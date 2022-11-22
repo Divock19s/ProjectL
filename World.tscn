@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Textures/World.tres" type="TileSet" id=1]
 [ext_resource path="res://Assets/Envirment/StaticBackground.png" type="Texture" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://Player/Drone.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Textures/BackGrounds.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Texts/Text.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Envirment/Obstales/Spikes.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Envirment/Obstales/MovingPlatform.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Envirment/Obstales/Smasher.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Envirment/Obstales/Bridge.tscn" type="PackedScene" id=16]
@@ -302,6 +303,8 @@
 19/shapes = [  ]
 19/z_index = 0
 
+[sub_resource type="RectangleShape2D" id=2]
+
 [node name="World" type="Node2D"]
 script = ExtResource( 18 )
 
@@ -324,28 +327,28 @@ position = Vector2( 32, 8 )
 
 [node name="TV" parent="." instance=ExtResource( 4 )]
 position = Vector2( 447, -8 )
-frame = 5
+frame = 0
 offset = Vector2( -8, 0 )
 
 [node name="TV2" parent="." instance=ExtResource( 4 )]
 position = Vector2( 400, 88 )
-frame = 5
+frame = 0
 offset = Vector2( -8, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 721, 95 )
+position = Vector2( 430, 129 )
 
 [node name="Bridge" parent="." instance=ExtResource( 16 )]
 position = Vector2( 392, 144 )
 
 [node name="Soldier2" parent="." instance=ExtResource( 7 )]
-position = Vector2( 839, 113 )
+position = Vector2( 862, 95 )
 
 [node name="Shotgun" parent="." instance=ExtResource( 20 )]
 position = Vector2( 367, 180 )
 
 [node name="Soldier" parent="." instance=ExtResource( 19 )]
-position = Vector2( 409, 180 )
+position = Vector2( 786, 121 )
 
 [node name="Smasher" parent="." instance=ExtResource( 15 )]
 position = Vector2( 548, 117 )
@@ -385,7 +388,7 @@ tile_data = PoolIntArray( -589764, 0, 0, -589763, 0, 0, -589762, 0, 0, -589761, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 443, 114 )
-frame = 4
+frame = 5
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -398,7 +401,17 @@ layer = 3
 position = Vector2( 90, 73 )
 remove = true
 
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2( 693, 117 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 2 )
+
+[node name="Spikes" parent="." instance=ExtResource( 13 )]
+position = Vector2( 418, 184 )
+
 [connection signal="death" from="Player" to="Gui/DeathMenu" method="_on_Player_death"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
 
 [editable path="Water"]
 [editable path="Player"]

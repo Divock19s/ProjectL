@@ -9,6 +9,7 @@ var fale=false
 var turn=true
 var dead=false
 var stand=false
+var inno = false
 
 export (int) var direction = 1
 
@@ -137,7 +138,8 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	elif anim_name=="StandBack":
 		stand=false
 	elif anim_name=="Die":
-		player._diamond()
+		if !inno:
+			player._diamond()
 		call_deferred("queue_free")
 
 
@@ -155,6 +157,12 @@ func _on_Collide_body_entered(body):
 		hitShape2.set_deferred("disabled",true)
 		body._kill(direction,1,50)
 		$HurtTimer.start()
+	if "TileMap" in body.name:
+		_piece()
+func _piece():
+		inno=true
+		deadSound.play()
+		dead=true
 
 
 func _on_Area2D_body_entered(body):

@@ -147,7 +147,7 @@ func _get_transition(delta):
 			if parent.is_on_floor():
 				parent.sprite.rotation_degrees=0
 				return states.Idle
-			elif parent._leftWall() or parent._rightWall():
+			elif (parent._leftWall() or parent._rightWall()) and !Input.is_action_pressed("ui_down"):
 				if parent.diamonds>=2:
 					parent._wallSlide()
 					parent.sprite.rotation_degrees=0
@@ -203,7 +203,7 @@ func _get_transition(delta):
 		states.Fall:
 			if parent.is_on_floor():
 				return states.Idle
-			elif parent._leftWall() or parent._rightWall():
+			elif (parent._leftWall() or parent._rightWall()) and !Input.is_action_pressed("ui_down"):
 				if parent.diamonds>=2:
 					parent._wallSlide()
 					return states.WallSlide
@@ -215,7 +215,7 @@ func _get_transition(delta):
 				parent.gravity = 500
 				return states.Idle
 			else:
-				if parent._leftWall()==false and parent._rightWall() == false:
+				if (parent._leftWall()==false and parent._rightWall() == false) or Input.is_action_pressed("ui_down"):
 					if parent.motion.y<=0:
 						parent.gravity = 500
 						return states.Jump

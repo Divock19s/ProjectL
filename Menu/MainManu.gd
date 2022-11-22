@@ -19,9 +19,15 @@ func _input(event):
 		Global.maps=("res://Maps/Map3.tscn")
 
 func _ready():
+	MusicPlayer.main = true
+	if MusicPlayer.Music.intense.playing:
+		MusicPlayer.Music.intense.stop()
+	if MusicPlayer.Music.calm.playing:
+		MusicPlayer.Music.calm.stop()
 	$AudioStreamPlayer.play()
-	MusicPlayer.music=false
 	$Options/VBoxContainer2/FullScreen.pressed=Global.FullScreen
+	$Options/VBoxContainer2/Music.pressed=Global.music
+	MusicPlayer.music=$Options/VBoxContainer2/Music.pressed
 	OS.window_fullscreen=Global.FullScreen
 	$Label.visible=false
 	$Label2.visible=false
@@ -136,6 +142,10 @@ func _tweenRight(objectt,destin):
 
 func _on_Resume_pressed():
 	if state==states.main:
+		MusicPlayer.main = false
+		if MusicPlayer.music:
+			MusicPlayer.Music.intense.play()
+			MusicPlayer.M=1
 		var _k = get_tree().change_scene(Global.maps)
 		MusicPlayer.music=$Options/VBoxContainer2/Music.pressed
 
@@ -168,3 +178,8 @@ func _on_Support_pressed():
 func _on_Controls_pressed():
 	if state==states.options:
 		_change_state(states.controls)
+
+
+func _on_Music_pressed():
+	if state==states.options:
+		MusicPlayer.music=$Options/VBoxContainer2/FullScreen.pressed

@@ -83,6 +83,7 @@ onready var DashEffect=preload("res://Effects/DashEffect.tscn")
 onready var explo=preload("res://Envirment/Explosion.tscn")
 
 func _ready():
+	sprite.position=Vector2.ZERO
 	_set_health(health)
 	_set_diamonds(diamonds)
 	_reset_attack()
@@ -90,7 +91,7 @@ func _ready():
 	Global.dead=false
 
 func _kill(dir,amm,kno):
-		if hurtable:
+		if hurtable or amm==4:
 			_set_health(health-amm)
 			_knock(dir,kno)
 			_knock_up(kno/2)
@@ -266,7 +267,8 @@ func _physics(grav,del):
 		motion.y=clamp(motion.y,-gravity,gravity)
 	else:
 		motion.y=0
-	motion=move_and_slide(motion,Vector2.UP)
+	var snap=Vector2.DOWN
+	motion=move_and_slide_with_snap(motion,snap,Vector2.UP)
 
 func _roof():
 	return $Up1.is_colliding() or $Up2.is_colliding()
@@ -376,10 +378,12 @@ func _set_diamonds(d):
 		if diamonds-prevd<0:
 			if ready:
 				looseDiamone.play()
+			Global.diamonds=diamonds
 			emit_signal("diamonds_updated",diamonds,-1)
 		elif diamonds-prevd>0:
 			if ready:
 				getDiamond.play()
+			Global.diamonds=diamonds
 			emit_signal("diamonds_updated",diamonds,1)
 
 func _set_health(h):

@@ -28,4 +28,14 @@ func _on_Area2D_body_entered(body):
 		var water = splash.instance()
 		add_child(water)
 		water.position.x=pos
+	elif body.is_in_group("platforms"):
+		$AudioStreamPlayer.play()
+		pos = body.global_position.x-position.x
+		if pos < 16:
+			pos = 12
+		elif pos > width-16:
+			pos=width-12
+		var water = splash.instance()
+		add_child(water)
+		water.position.x=pos
 		

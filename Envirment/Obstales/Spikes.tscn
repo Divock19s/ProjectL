@@ -10,6 +10,7 @@ extents = Vector2( 1, 2 )
 extents = Vector2( 4, 3 )
 
 [node name="Spikes" type="Area2D"]
+collision_mask = 3
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

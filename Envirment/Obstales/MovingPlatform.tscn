@@ -10,17 +10,17 @@ extents = Vector2( 8, 4 )
 position = Vector2( 0, 4 )
 script = ExtResource( 2 )
 
-[node name="Platform" type="KinematicBody2D" parent="."]
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 2
+
+[node name="Platform" type="KinematicBody2D" parent="." groups=["platforms"]]
 collision_layer = 3
 collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
 shape = SubResource( 1 )
 one_way_collision_margin = 0.0
-
-[node name="Sprite" type="Sprite" parent="Platform"]
-texture = ExtResource( 1 )
-hframes = 2
 
 [node name="Tween" type="Tween" parent="."]
 
