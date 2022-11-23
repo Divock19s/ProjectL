@@ -512,6 +512,7 @@ text = "	That was your worst and last memory of her, the last time that you saw 
 position = Vector2( 1153, 627 )
 scale = Vector2( 7, 7 )
 frames = SubResource( 5 )
+frame = 1
 playing = true
 
 [node name="Label" type="Label" parent="Label"]

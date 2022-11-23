@@ -26,6 +26,17 @@ onready var dD=$Diamonds/Diamond_Duration
 onready var dF=$Diamonds/Diamond_Frequency 
 
 func _ready():
+		if Global.health==1:
+			heart2.frame=1
+			heart1.frame=0
+		elif Global.health==2:
+			heart2.frame=2
+			heart1.frame=0
+		elif Global.health==3:
+			heart2.frame=2
+			heart1.frame=1
+		elif Global.health==4:
+			heart2.frame=2
 		if Global.diamonds==0:
 			return
 		if Global.diamonds>=1:
@@ -70,27 +81,49 @@ func _reset(tween,sprite):
 	tween.start()
 
 func _on_Player_health_updated(health):
-	if health==0:
-		heart2.frame=0
-		heart1.frame=0
-		heart=heart2
-		_health_start(heart)
-	elif health==1:
-		heart2.frame=1
-		heart1.frame=0
-		heart=heart2
-		_health_start(heart)
-	elif health==2:
-		heart2.frame=2
-		heart1.frame=0
-		heart=heart1
-		_health_start(heart)
-	elif health==3:
-		heart2.frame=2
-		heart1.frame=1
-		heart=heart1
-		_health_start(heart)
-
+	var si=Global.health-health
+	if sign(si)>0:
+		if health==0:
+			heart2.frame=0
+			heart1.frame=0
+			heart=heart2
+			_health_start(heart)
+		elif health==1:
+			heart2.frame=1
+			heart1.frame=0
+			heart=heart2
+			_health_start(heart)
+		elif health==2:
+			heart2.frame=2
+			heart1.frame=0
+			heart=heart1
+			_health_start(heart)
+		elif health==3:
+			heart2.frame=2
+			heart1.frame=1
+			heart=heart1
+			_health_start(heart)
+	else:
+		if health==1:
+			heart2.frame=1
+			heart1.frame=0
+			heart=heart2
+			_health_start(heart)
+		elif health==2:
+			heart2.frame=2
+			heart1.frame=0
+			heart=heart2
+			_health_start(heart)
+		elif health==3:
+			heart2.frame=2
+			heart1.frame=1
+			heart=heart1
+			_health_start(heart)
+		elif health==4:
+			heart2.frame=2
+			heart1.frame=2
+			heart=heart1
+			_health_start(heart)
 
 func _on_Health_Duration_timeout():
 	_reset(Health_tween,heart)

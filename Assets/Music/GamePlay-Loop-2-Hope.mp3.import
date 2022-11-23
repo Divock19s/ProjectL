@@ -11,5 +11,5 @@ dest_files=[ "res://.import/GamePlay-Loop-2-Hope.mp3-038d53a0a1f9d04edca0801f861
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

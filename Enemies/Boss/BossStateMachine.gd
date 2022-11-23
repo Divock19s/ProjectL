@@ -11,7 +11,8 @@ func _ready():
 	_add_state("Attack")
 	_add_state("Jump")
 	_add_state("Dead")
-	call_deferred("_set_state",states.Idle)
+	_add_state("Start")
+	call_deferred("_set_state",states.Start)
 
 func _state_logic(delta):
 	if ![states.Attack,states.Shoot,states.Charge].has(state):
@@ -28,6 +29,9 @@ func _state_logic(delta):
 	parent._physics(delta)
 
 func _get_transition(_delta):
+	if state==states.Start:
+		if parent.start:
+			return states.Idle
 	if parent.player.dead:
 		if ![states.Attack,states.Idle,states.Dead]:
 			return states.Idle
@@ -102,6 +106,8 @@ func _enter_state(new_state,old_state):
 			parent._target()
 			parent.jumpp=true
 			parent.animation.play("Jump")
+		states.Start:
+			parent.animation.play("Idle")
 
 func _exit_state(old_state,new_state):
 	match old_state:

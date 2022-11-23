@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=2]
+[gd_scene load_steps=58 format=2]
 
 [ext_resource path="res://Textures/World.tres" type="TileSet" id=1]
 [ext_resource path="res://Assets/Envirment/StaticBackground.png" type="Texture" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://Enemies/Shotgun/Shotgun.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Envirment/Obstales/Shooter.tscn" type="PackedScene" id=21]
 [ext_resource path="res://Envirment/BlueGem.tscn" type="PackedScene" id=22]
+[ext_resource path="res://Envirment/Hear.tscn" type="PackedScene" id=23]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 12, 10 )
@@ -1038,7 +1039,7 @@ position = Vector2( 243.261, 20 )
 shape = SubResource( 6 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1584, 96 )
+position = Vector2( 1576, 32 )
 
 [node name="pAnimation" parent="Player" index="5"]
 anims/AirKick = SubResource( 7 )
@@ -1080,7 +1081,7 @@ tile_data = PoolIntArray( 0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 1, 0, 5, 1, 0, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 1584, 24 )
-frame = 2
+frame = 0
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -1133,7 +1134,7 @@ tex = [ "A shortcuts guy, i like that, but be carefull" ]
 [node name="MovingPlatform" parent="." instance=ExtResource( 8 )]
 position = Vector2( 1032, 116 )
 move_to = Vector2( 232, 0 )
-speed = 8.0
+speed = 6.0
 
 [node name="MovingPlatform2" parent="." instance=ExtResource( 8 )]
 position = Vector2( 216, 116 )
@@ -1198,7 +1199,7 @@ speed = 5.0
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 504, 176 )
-frame = 2
+frame = 7
 
 [node name="4Spike" type="Node2D" parent="."]
 
@@ -1562,8 +1563,18 @@ position = Vector2( 1580, 40 )
 wait_time = 5.0
 one_shot = true
 
+[node name="Heart" parent="." instance=ExtResource( 23 )]
+position = Vector2( 2112, 112 )
+
+[node name="Heart2" parent="." instance=ExtResource( 23 )]
+position = Vector2( 922, 346 )
+
+[node name="Heart3" parent="." instance=ExtResource( 23 )]
+position = Vector2( 58, 498 )
+
 [connection signal="death" from="Player" to="Gui/DeathMenu" method="_on_Player_death"]
 [connection signal="diamonds_updated" from="Player" to="." method="_on_Player_diamonds_updated"]
+[connection signal="diamonds_updated" from="Player" to="Gui/PauseMenu" method="_on_Player_diamonds_updated"]
 [connection signal="body_entered" from="Down" to="." method="_on_Down_body_entered"]
 [connection signal="body_entered" from="Top" to="." method="_on_Top_body_entered"]
 [connection signal="body_entered" from="Right" to="." method="_on_Right_body_entered"]

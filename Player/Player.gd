@@ -84,10 +84,11 @@ onready var explo=preload("res://Envirment/Explosion.tscn")
 
 func _ready():
 	sprite.position=Vector2.ZERO
-	_set_health(health)
-	_set_diamonds(diamonds)
+	_set_health(Global.health)
+	_set_diamonds(Global.diamonds)
 	_reset_attack()
 	$Ready.start()
+	dead=false
 	Global.dead=false
 
 func _kill(dir,amm,kno):
@@ -311,6 +312,7 @@ func _on_pAnimation_animation_finished(anim_name):
 		shoot=false
 	elif anim_name =="Death":
 		Global.dead=true
+		Global.health=4
 		emit_signal("death")
 
 func _on_Kick_body_entered(body):
@@ -364,13 +366,15 @@ func _die():
 	var r = explo.instance()
 	r.global_position=global_position
 	r.modulate=Color8(0,199,255)
-	get_parent().add_child(r)
+	get_parent().call_deferred("add_child",r)
 	dead=true
 	_reset_attack()
 
 func _diamond():
-	_set_diamonds(diamonds-1)
-
+	if diamonds<6:
+		_set_diamonds(diamonds-1)
+func _store_health():
+	Global.health=health
 func _set_diamonds(d):
 	var prevd=diamonds
 	diamonds= clamp(d,0,6)
@@ -390,7 +394,10 @@ func _set_health(h):
 	var prevh=health
 	health= clamp(h,0,4)
 	if health!=prevh:
-		hurtSound.play()
+		if sign(prevh-health)>=0:
+			hurtSound.play()
+		else:
+			getDiamond.play()
 		emit_signal("health_updated",health)
 	if health==0:
 		deathSound.play()

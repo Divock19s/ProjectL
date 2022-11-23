@@ -5,6 +5,7 @@ export (int) var prog=0
 onready var textbox=get_parent().get_node("Player/CanvasLayer/Text")
 export (Array) var tex=[]
 func _ready():
+	print(Global.progress)
 	if Global.progress > prog:
 		call_deferred("queue_free")
 

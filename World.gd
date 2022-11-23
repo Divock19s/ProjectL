@@ -10,7 +10,8 @@ extends Node2D
 func _ready():
 	$Player.diamonds=6
 
-
-func _on_Area2D_body_entered(body):
-	if "TileMap" in body.name:
-		print("ez pz")
+func _process(delta):
+	if Input.is_action_just_pressed("next"):
+		MusicPlayer._play()
+	if Input.is_action_just_pressed("ui_down"):
+		MusicPlayer.Music.stop()

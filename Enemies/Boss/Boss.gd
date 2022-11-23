@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 signal health_updated(health)
 
+var start=false
 var shoot=false
 var attack=false
 var battack=true
@@ -14,7 +15,7 @@ var jamp=false
 var tim=true
 var transit=true
 
-var max_health=20
+var max_health=2000
 var health = max_health setget _set_health
 var dira = -1
 var jumpCount=0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://Textures/World.tres" type="TileSet" id=1]
 [ext_resource path="res://Assets/Envirment/StaticBackground.png" type="Texture" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://Enemies/Shotgun/Shotgun.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Envirment/Obstales/Shooter.tscn" type="PackedScene" id=21]
 [ext_resource path="res://Envirment/GreenGem.tscn" type="PackedScene" id=22]
+[ext_resource path="res://Envirment/Hear.tscn" type="PackedScene" id=23]
 
 [sub_resource type="RectangleShape2D" id=9]
 extents = Vector2( 12, 10 )
@@ -516,7 +517,6 @@ tile_data = PoolIntArray( 0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 1, 0, 5, 1, 0, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 1584, 24 )
-frame = 0
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -594,7 +594,11 @@ speed = 15.0
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 1320, 192 )
-frame = 8
+frame = 1
+
+[node name="TV2" parent="Tv" instance=ExtResource( 13 )]
+position = Vector2( 64, 616 )
+frame = 1
 
 [node name="4Spike" type="Node2D" parent="."]
 
@@ -1048,8 +1052,18 @@ position = Vector2( 1800, 468 )
 [node name="up" type="Position2D" parent="."]
 position = Vector2( 1560, 96 )
 
+[node name="Heart" parent="." instance=ExtResource( 23 )]
+position = Vector2( 232, 344 )
+
+[node name="Heart2" parent="." instance=ExtResource( 23 )]
+position = Vector2( 1792, 472 )
+
+[node name="Heart3" parent="." instance=ExtResource( 23 )]
+position = Vector2( 672, 288 )
+
 [connection signal="death" from="Player" to="Gui/DeathMenu" method="_on_Player_death"]
 [connection signal="diamonds_updated" from="Player" to="." method="_on_Player_diamonds_updated"]
+[connection signal="diamonds_updated" from="Player" to="Gui/PauseMenu" method="_on_Player_diamonds_updated"]
 [connection signal="body_entered" from="downArea" to="." method="_on_downArea_body_entered"]
 [connection signal="body_entered" from="downArea2" to="." method="_on_downArea2_body_entered"]
 [connection signal="body_entered" from="upArea" to="." method="_on_upArea_body_entered"]

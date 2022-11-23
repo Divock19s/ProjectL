@@ -19,7 +19,7 @@ func _shake():
 		var rand=Vector2()
 		rand.x=rand_range(-A,A)
 		rand.y=rand_range(-A,A)
-		var _i=interpolate_property(camera,"offset",camera.offset,rand,F.wait_time,T,EZ)
+		var _i= interpolate_property(camera,"offset",camera.offset,rand,F.wait_time,T,EZ)
 		var _s= start()
 func _reset():
 	var _i =interpolate_property(camera,"offset",camera.offset,Vector2.ZERO,F.wait_time,T,EZ)

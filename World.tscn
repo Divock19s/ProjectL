@@ -20,6 +20,7 @@
 [ext_resource path="res://World.gd" type="Script" id=18]
 [ext_resource path="res://Enemies/Soldier/Soldier.tscn" type="PackedScene" id=19]
 [ext_resource path="res://Enemies/Shotgun/Shotgun.tscn" type="PackedScene" id=20]
+[ext_resource path="res://Envirment/Hear.tscn" type="PackedScene" id=21]
 
 [sub_resource type="TileSet" id=1]
 0/name = "StaticBackground.png 0"
@@ -303,8 +304,6 @@
 19/shapes = [  ]
 19/z_index = 0
 
-[sub_resource type="RectangleShape2D" id=2]
-
 [node name="World" type="Node2D"]
 script = ExtResource( 18 )
 
@@ -327,12 +326,12 @@ position = Vector2( 32, 8 )
 
 [node name="TV" parent="." instance=ExtResource( 4 )]
 position = Vector2( 447, -8 )
-frame = 0
+frame = 6
 offset = Vector2( -8, 0 )
 
 [node name="TV2" parent="." instance=ExtResource( 4 )]
 position = Vector2( 400, 88 )
-frame = 0
+frame = 6
 offset = Vector2( -8, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
@@ -388,7 +387,7 @@ tile_data = PoolIntArray( -589764, 0, 0, -589763, 0, 0, -589762, 0, 0, -589761, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 443, 114 )
-frame = 5
+frame = 4
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -401,17 +400,19 @@ layer = 3
 position = Vector2( 90, 73 )
 remove = true
 
-[node name="Area2D" type="Area2D" parent="."]
-position = Vector2( 693, 117 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource( 2 )
-
 [node name="Spikes" parent="." instance=ExtResource( 13 )]
 position = Vector2( 418, 184 )
 
+[node name="BlueGem" parent="." instance=ExtResource( 21 )]
+position = Vector2( 500, 137 )
+
+[node name="BlueGem2" parent="." instance=ExtResource( 21 )]
+position = Vector2( 647, 103 )
+
+[node name="BlueGem3" parent="." instance=ExtResource( 21 )]
+position = Vector2( 580, 85 )
+
 [connection signal="death" from="Player" to="Gui/DeathMenu" method="_on_Player_death"]
-[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
 
 [editable path="Water"]
 [editable path="Player"]

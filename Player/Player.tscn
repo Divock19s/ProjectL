@@ -705,7 +705,7 @@ one_shot = true
 
 [node name="Camera2D" parent="." instance=ExtResource( 7 )]
 zoom = Vector2( 0.2, 0.2 )
-smoothing_enabled = true
+smoothing_speed = 2.0
 
 [node name="HurtAnimation" type="AnimationPlayer" parent="."]
 anims/Hurt = SubResource( 40 )
@@ -723,7 +723,7 @@ one_shot = true
 
 [node name="Attack" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 13 )
-volume_db = -20.0
+volume_db = -40.0
 
 [node name="Shoot2" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 19 )

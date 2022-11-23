@@ -20,10 +20,7 @@ func _input(event):
 
 func _ready():
 	MusicPlayer.main = true
-	if MusicPlayer.Music.intense.playing:
-		MusicPlayer.Music.intense.stop()
-	if MusicPlayer.Music.calm.playing:
-		MusicPlayer.Music.calm.stop()
+	MusicPlayer.Music.stop()
 	$AudioStreamPlayer.play()
 	$Options/VBoxContainer2/FullScreen.pressed=Global.FullScreen
 	$Options/VBoxContainer2/Music.pressed=Global.music
@@ -144,15 +141,18 @@ func _on_Resume_pressed():
 	if state==states.main:
 		MusicPlayer.main = false
 		if MusicPlayer.music:
-			MusicPlayer.Music.intense.play()
-			MusicPlayer.M=1
+			MusicPlayer._play()
+			MusicPlayer.M=2
+		else:
+			MusicPlayer.Music.stop()
 		var _k = get_tree().change_scene(Global.maps)
 		MusicPlayer.music=$Options/VBoxContainer2/Music.pressed
 
 
 func _on_Reset_pressed():
 	if state==states.main:
-		pass
+		Global._reset()
+		$Menu/VBoxContainer/Resume.text="New Game"
 
 
 func _on_Options_pressed():

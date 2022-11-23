@@ -16,6 +16,7 @@ func _ready():
 	_add_state("DownKick")
 	_add_state("Hurt")
 	_add_state("Dead")
+	_add_state("AirKick")
 	call_deferred("_set_state",states.Idle)
 
 func _input(event):
@@ -56,6 +57,9 @@ func _input(event):
 					parent.downKick=true
 					_set_state(states.DownKick)
 		elif [states.Jump,states.Fall].has(state):
+			if event.is_action_pressed("ui_select"):
+				parent.kick=true
+				_set_state(states.AirKick)
 			if event.is_action_pressed("ui_focus_next") and parent.dashable:
 				if parent.diamonds>=4:
 					parent._dash(parent.dashDirection,false)
@@ -94,7 +98,7 @@ func _state_logic(delta):
 	if !parent.die:
 		var direction=Input.get_action_strength("ui_right")-Input.get_action_strength("ui_left")
 		parent._camera(direction)
-		if ![states.WallSlide,states.Dash,states.Kick,states.Slide,states.Kick,states.Shoot].has(state):
+		if ![states.WallSlide,states.Dash,states.Kick,states.Slide,states.Kick,states.Shoot,states.AirKick].has(state):
 			parent._direction(direction)
 		if [states.Idle,states.Run,states.Crouch,states.Stealth].has(state):
 			if parent.dashable==false:
@@ -105,7 +109,7 @@ func _state_logic(delta):
 			if direction !=0:
 				parent.side=direction
 			parent._walk(direction)
-		elif [states.DoubleJump,states.Jump,states.Fall,states.DownKick].has(state):
+		elif [states.DoubleJump,states.Jump,states.Fall,states.DownKick,states.AirKick].has(state):
 			parent._air(direction)
 			if [states.DoubleJump,states.DownKick].has(state):
 				parent.sprite.rotation_degrees+=30*parent.side
@@ -173,6 +177,15 @@ func _get_transition(delta):
 			if parent.motion.x==0:
 				return states.Crouch
 		states.Kick:
+			if !parent.kick:
+				if parent.is_on_floor():
+					return states.Idle
+				else:
+					if parent.motion.y>0:
+						return states.Fall
+					else:
+						return states.Jump
+		states.AirKick:
 			if !parent.kick:
 				if parent.is_on_floor():
 					return states.Idle
@@ -317,6 +330,10 @@ func _enter_state(new_state,old_state):
 				parent.plAnimation.play("AirKick")
 			else:
 				parent.plAnimation.play("Kick")
+		states.AirKick:
+			parent.footSound.stop()
+			parent.attackSound.play()
+			parent.plAnimation.play("AirKick")
 		states.DownKick:
 			parent.downSound.play()
 			parent.attackSound.play()

@@ -1,17 +1,63 @@
 extends Node
-var diamonds = 0
-var health = 4
-var progress=0
-var FullScreen=true
-var music = true
-var dead=false
-var posa="new"
-var glo_pos=Vector2(0,0)
-var maps="res://Story.tscn"
-func _ready():
-	pass # Replace with function body.
 
+var data={"diamonds":0,"health":4,"progress":0,"FullScreen":true,"music":true,
+"posa":"new","glo":Vector2(0,0),"mos":Vector2(0,0),"maps":"res://Story.tscn"}
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+var path="user://save.dat"
+
+var diamonds
+var health
+var progress
+var FullScreen
+var music
+var dead
+var posa
+var glo_pos
+var map_pos
+var maps
+
+func _init():
+	_load()
+	_set_data()
+
+func _set_data():
+	diamonds = data.diamonds
+	health = data.health
+	progress=data.progress
+	FullScreen=data.FullScreen
+	music = data.music
+	dead=false
+	posa=data.posa
+	glo_pos=data.glo
+	map_pos=data.mos
+	maps=data.maps
+	if progress<diamonds+1:
+		progress=diamonds+1
+
+func _save():
+	var nata={"diamonds":diamonds,"health":health,"progress":progress,"FullScreen":FullScreen,"music":music,
+	"posa":posa,"glo":glo_pos,"mos":map_pos,"maps":maps}
+	var file = File.new()
+	var error = file.open_encrypted_with_pass(path,File.WRITE,"Astalavista")
+	if error == OK:
+		file.store_var(nata)
+		file.close()
+
+func _load():
+	var file = File.new()
+	if file.file_exists(path):
+		var error = file.open_encrypted_with_pass(path,File.READ,"Astalavista")
+		if error == OK:
+			data=file.get_var()
+			file.close()
+
+func _reset():
+	var nata={"diamonds":0,"health":4,"progress":0,"FullScreen":true,"music":true,
+	"posa":"new","glo":Vector2(0,0),"mos":Vector2(0,0),"maps":"res://Story.tscn"}
+	var file = File.new()
+	var error = file.open_encrypted_with_pass(path,File.WRITE,"Astalavista")
+	if error == OK:
+		file.store_var(nata)
+		file.close()
+	data=nata
+	_set_data()

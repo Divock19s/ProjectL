@@ -12,9 +12,12 @@ func _on_Area2D_body_entered(body):
 		r.global_position=global_position
 		r.modulate=Color8(247,81,79)
 		get_parent().add_child(r)
+		if Global.progress<5:
+			Global.progress=5
 		Global.diamonds=4
 		body.diamonds=4
 		$AnimatedSprite.play("Collect")
+		Global._save()
 
 
 func _on_AnimatedSprite_animation_finished():

@@ -4,6 +4,7 @@ onready var player = $Player
 onready var camera = $Player/Camera2D
 
 func _ready():
+	camera.smoothing_enabled=false
 	if Global.progress>0:
 		_on_Text1_text_done()
 	if Global.posa=="new":
@@ -11,7 +12,6 @@ func _ready():
 	else:
 		if Global.posa=="down":
 			$Down/CollisionShape2D.set_deferred("disabled",true)
-			$Timer.start()
 			player.global_position=$down.global_position
 		elif Global.posa=="up":
 			player.global_position=$up.global_position
@@ -25,16 +25,18 @@ func _ready():
 	camera.limit_top=0
 	camera.limit_right=1664
 	camera.limit_bottom=256
+	Global._save()
 
 func _on_Text1_text_done():
-#	Global.progress=1
+	if Global.progress<1:
+		Global.progress=1
 	$Door._open()
 
 func _teleport():
 	pass
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	Global.maps="res://Maps/Map2.tscn"
+	player._store_health()
 	var _k = get_tree().change_scene(Global.maps)
 
 
@@ -50,5 +52,5 @@ func _on_Area2D_body_entered(body):
 func _on_Up_body_entered(body):
 	if "Player" in body.name:
 		Global.posa="down"
-		Global.maps="res://Maps/Map2.tscn"
+		Global.maps="res://Maps/Map6.tscn"
 		$AnimationPlayer.play("FADE")

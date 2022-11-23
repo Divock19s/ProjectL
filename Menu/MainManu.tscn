@@ -116,7 +116,7 @@ script = ExtResource( 4 )
 scale = Vector2( 10, 10 )
 z_index = -1
 frames = SubResource( 9 )
-frame = 3
+frame = 2
 playing = true
 centered = false
 
@@ -239,7 +239,7 @@ icon_align = 1
 margin_top = 328.0
 margin_right = 282.0
 margin_bottom = 406.0
-text = "Support"
+text = "Credits"
 align = 1
 icon_align = 1
 
@@ -303,13 +303,13 @@ margin_bottom = 40.0
 position = Vector2( 1195, 670 )
 scale = Vector2( 7, 7 )
 frames = SubResource( 12 )
-frame = 1
 playing = true
 
 [node name="Label2" type="AnimatedSprite" parent="."]
 position = Vector2( 1005, 670 )
 scale = Vector2( 7, 7 )
 frames = SubResource( 13 )
+frame = 1
 playing = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
