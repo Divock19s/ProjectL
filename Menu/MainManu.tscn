@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://Assets/Player/GUI/PauseMenu.png" type="Texture" id=1]
 [ext_resource path="res://GUI/Fonts/Born2bSportyV2.ttf" type="DynamicFontData" id=2]
@@ -26,6 +26,8 @@
 [ext_resource path="res://Assets/Player/GUI/NoteRight.png" type="Texture" id=24]
 [ext_resource path="res://Assets/Music/MenuLoop.mp3" type="AudioStream" id=25]
 [ext_resource path="res://Assets/Sounds/Menu/Change.wav" type="AudioStream" id=26]
+[ext_resource path="res://Assets/Menu/Reset1.png" type="Texture" id=27]
+[ext_resource path="res://Assets/Menu/Reset2.png" type="Texture" id=28]
 
 [sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
@@ -77,6 +79,17 @@ animations = [ {
 "speed": 10.0
 } ]
 
+[sub_resource type="Shader" id=16]
+code = "shader_type canvas_item;
+void fragment(){
+	vec4 color=texture(SCREEN_TEXTURE,SCREEN_UV,1.0);
+	COLOR=color;
+	
+}"
+
+[sub_resource type="ShaderMaterial" id=15]
+shader = SubResource( 16 )
+
 [sub_resource type="DynamicFont" id=10]
 size = 64
 outline_color = Color( 0.0470588, 0.054902, 0.101961, 1 )
@@ -84,6 +97,14 @@ font_data = ExtResource( 2 )
 
 [sub_resource type="Theme" id=11]
 default_font = SubResource( 10 )
+
+[sub_resource type="SpriteFrames" id=17]
+animations = [ {
+"frames": [ ExtResource( 27 ), ExtResource( 28 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
 
 [sub_resource type="Theme" id=2]
 
@@ -116,11 +137,13 @@ script = ExtResource( 4 )
 scale = Vector2( 10, 10 )
 z_index = -1
 frames = SubResource( 9 )
-frame = 2
+frame = 3
 playing = true
 centered = false
 
 [node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color( 0.654902, 0.654902, 0.654902, 1 )
+material = SubResource( 15 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.784314 )
@@ -180,6 +203,13 @@ margin_right = 220.0
 margin_bottom = 406.0
 rect_min_size = Vector2( 75, 0 )
 text = "Quit"
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Menu"]
+visible = false
+position = Vector2( 642, 374 )
+z_index = 1
+frames = SubResource( 17 )
+playing = true
 
 [node name="Options" type="CenterContainer" parent="."]
 anchor_left = 1.0

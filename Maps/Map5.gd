@@ -8,7 +8,6 @@ func _ready():
 	camera.smoothing_enabled=false
 	$"One Dore".open=Global.diamonds>0
 	if Global.posa=="left":
-		$Timer.start()
 		$Player.global_position=$left.global_position
 	elif Global.posa=="down":
 		$Player.global_position=$down.global_position

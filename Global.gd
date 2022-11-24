@@ -31,8 +31,6 @@ func _set_data():
 	glo_pos=data.glo
 	map_pos=data.mos
 	maps=data.maps
-	if progress<diamonds+1:
-		progress=diamonds+1
 
 func _save():
 	var nata={"diamonds":diamonds,"health":health,"progress":progress,"FullScreen":FullScreen,"music":music,

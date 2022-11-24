@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Textures/World.tres" type="TileSet" id=1]
 [ext_resource path="res://Assets/Envirment/StaticBackground.png" type="Texture" id=2]
@@ -17,6 +17,8 @@
 [ext_resource path="res://Envirment/Obstales/Spikes.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Envirment/Obstales/Smasher.tscn" type="PackedScene" id=16]
 [ext_resource path="res://Envirment/Hear.tscn" type="PackedScene" id=17]
+[ext_resource path="res://Envirment/Maps/new_shader.tres" type="Shader" id=18]
+[ext_resource path="res://Envirment/Maps/shader.png" type="Texture" id=19]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 124, 20 )
@@ -337,6 +339,11 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
 
+[sub_resource type="ShaderMaterial" id=6]
+shader = ExtResource( 18 )
+shader_param/color = Vector3( 0.35, 0.2, 0.95 )
+shader_param/OCTAVES = 4
+
 [node name="Map1" type="Node2D"]
 script = ExtResource( 6 )
 
@@ -384,7 +391,6 @@ tile_data = PoolIntArray( 4, 1, 0, 5, 1, 0, 6, 1, 0, 7, 1, 0, 8, 1, 0, 9, 1, 0, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 443, 114 )
-frame = 2
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -430,7 +436,7 @@ direction = -1
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 40, 152 )
-frame = 2
+frame = 8
 
 [node name="4Spike" type="Node2D" parent="."]
 
@@ -481,6 +487,13 @@ position = Vector2( 776, 24 )
 position = Vector2( 4, 0 )
 shape = SubResource( 3 )
 
+[node name="right2" type="Area2D" parent="."]
+position = Vector2( 1687, 37 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="right2"]
+position = Vector2( 4, 0 )
+shape = SubResource( 3 )
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/FADE = SubResource( 4 )
 anims/RESET = SubResource( 5 )
@@ -500,11 +513,42 @@ position = Vector2( 780, 48 )
 [node name="Heart" parent="." instance=ExtResource( 17 )]
 position = Vector2( 1608, 104 )
 
+[node name="CanvasLayer" type="ParallaxBackground" parent="."]
+layer = 0
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="CanvasLayer"]
+motion_mirroring = Vector2( 1280, 720 )
+
+[node name="TopLeft" type="Sprite" parent="CanvasLayer/ParallaxLayer"]
+material = SubResource( 6 )
+texture = ExtResource( 19 )
+offset = Vector2( 320, 180 )
+
+[node name="DownLeft" type="Sprite" parent="CanvasLayer/ParallaxLayer"]
+material = SubResource( 6 )
+texture = ExtResource( 19 )
+offset = Vector2( 320, 540 )
+flip_v = true
+
+[node name="TopRight" type="Sprite" parent="CanvasLayer/ParallaxLayer"]
+material = SubResource( 6 )
+texture = ExtResource( 19 )
+offset = Vector2( 960, 180 )
+flip_h = true
+
+[node name="DownRight" type="Sprite" parent="CanvasLayer/ParallaxLayer"]
+material = SubResource( 6 )
+texture = ExtResource( 19 )
+offset = Vector2( 960, 540 )
+flip_h = true
+flip_v = true
+
 [connection signal="death" from="Player" to="Gui/DeathMenu" method="_on_Player_death"]
 [connection signal="diamonds_updated" from="Player" to="Gui/PauseMenu" method="_on_Player_diamonds_updated"]
 [connection signal="text_done" from="Text1" to="." method="_on_Text1_text_done"]
 [connection signal="body_entered" from="Down" to="." method="_on_Area2D_body_entered"]
 [connection signal="body_entered" from="Up" to="." method="_on_Up_body_entered"]
+[connection signal="body_entered" from="right2" to="." method="_on_right2_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 
 [editable path="Water"]

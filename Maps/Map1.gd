@@ -54,3 +54,10 @@ func _on_Up_body_entered(body):
 		Global.posa="down"
 		Global.maps="res://Maps/Map6.tscn"
 		$AnimationPlayer.play("FADE")
+
+
+func _on_right2_body_entered(body):
+	if "Player" in body.name:
+		Global.posa="left"
+		Global.maps="res://Maps/Map5.tscn"
+		$AnimationPlayer.play("FADE")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Textures/World.tres" type="TileSet" id=1]
 [ext_resource path="res://Assets/Envirment/StaticBackground.png" type="Texture" id=2]
@@ -11,9 +11,10 @@
 [ext_resource path="res://GUI/BossHealthBar.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Player/Drone.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Textures/BackGrounds.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Envirment/Maps/new_shader.tres" type="Shader" id=12]
 [ext_resource path="res://Envirment/TV.tscn" type="PackedScene" id=13]
+[ext_resource path="res://Envirment/Maps/shader.png" type="Texture" id=14]
 [ext_resource path="res://GUI/Black.tscn" type="PackedScene" id=17]
-[ext_resource path="res://Envirment/Obstales/Shooter.tscn" type="PackedScene" id=21]
 
 [sub_resource type="TileSet" id=1]
 0/name = "StaticBackground.png 0"
@@ -331,6 +332,27 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
 
+[sub_resource type="Animation" id=7]
+resource_name = "end"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Gui/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 1.5, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = ExtResource( 12 )
+shader_param/color = Vector3( 0.35, 0.2, 0.95 )
+shader_param/OCTAVES = 4
+
 [node name="Map7" type="Node2D"]
 script = ExtResource( 6 )
 __meta__ = {
@@ -389,12 +411,7 @@ position = Vector2( 400, 372 )
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( -392, -316 )
-
-[node name="4Spike" type="Node2D" parent="."]
-position = Vector2( 400, 372 )
-
-[node name="4Spike2" type="Node2D" parent="."]
-position = Vector2( 496, 372 )
+frame = 1
 
 [node name="Out" type="Area2D" parent="."]
 position = Vector2( 856, 256 )
@@ -415,21 +432,14 @@ shape = SubResource( 3 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/FADE = SubResource( 4 )
 anims/RESET = SubResource( 5 )
-
-[node name="Shooter" parent="." instance=ExtResource( 21 )]
-position = Vector2( 471, 407 )
-direction = 1
-distance = 200
-
-[node name="Up" type="Position2D" parent="."]
-position = Vector2( 424, 408 )
+anims/end = SubResource( 7 )
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
-position = Vector2( 400, 372 )
-frame = 2
+position = Vector2( 792, 248 )
+frame = 1
 
 [node name="Boss" parent="." instance=ExtResource( 8 )]
-position = Vector2( 168, 256 )
+position = Vector2( 216, 272 )
 
 [node name="Tween" type="Tween" parent="."]
 
@@ -437,11 +447,45 @@ position = Vector2( 168, 256 )
 position = Vector2( 373, 272 )
 scale = Vector2( -1, 1 )
 
+[node name="CollisionShape2D" parent="Door" index="0"]
+z_index = 5
+
+[node name="CanvasLayer2" type="ParallaxBackground" parent="."]
+layer = 0
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="CanvasLayer2"]
+motion_mirroring = Vector2( 1280, 720 )
+
+[node name="TopLeft" type="Sprite" parent="CanvasLayer2/ParallaxLayer"]
+material = SubResource( 6 )
+texture = ExtResource( 14 )
+offset = Vector2( 320, 180 )
+
+[node name="DownLeft" type="Sprite" parent="CanvasLayer2/ParallaxLayer"]
+material = SubResource( 6 )
+texture = ExtResource( 14 )
+offset = Vector2( 320, 540 )
+flip_v = true
+
+[node name="TopRight" type="Sprite" parent="CanvasLayer2/ParallaxLayer"]
+material = SubResource( 6 )
+texture = ExtResource( 14 )
+offset = Vector2( 960, 180 )
+flip_h = true
+
+[node name="DownRight" type="Sprite" parent="CanvasLayer2/ParallaxLayer"]
+material = SubResource( 6 )
+texture = ExtResource( 14 )
+offset = Vector2( 960, 540 )
+flip_h = true
+flip_v = true
+
 [connection signal="death" from="Player" to="Gui/DeathMenu" method="_on_Player_death"]
 [connection signal="diamonds_updated" from="Player" to="Gui/PauseMenu" method="_on_Player_diamonds_updated"]
 [connection signal="body_entered" from="Out" to="." method="_on_Out_body_entered"]
 [connection signal="body_entered" from="In" to="." method="_on_In_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="_deadBoss" from="Boss" to="." method="_end"]
 [connection signal="health_updated" from="Boss" to="Player/CanvasLayer/HealthBar" method="_on_Boss_health_updated"]
 
 [editable path="Player"]

@@ -1,6 +1,7 @@
 extends Node2D
 
 func _ready():
+	$AnimatedSprite.playing=false
 	$AnimationPlayer.play("Start")
 
 func _input(event):

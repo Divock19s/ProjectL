@@ -35,10 +35,10 @@ func _get_transition(_delta):
 	if parent.player.dead:
 		if ![states.Attack,states.Idle,states.Dead]:
 			return states.Idle
+	if parent.health<=5:
+		if ![states.Dead,states.Shoot,states.Jump].has(state):
+			return states.Dead
 	else:
-		if phase==0:
-			if state!=states.Dead:
-				return states.Dead
 		if phase==1:
 			return _phase1()
 		elif phase==2:
@@ -107,7 +107,7 @@ func _enter_state(new_state,old_state):
 			parent.jumpp=true
 			parent.animation.play("Jump")
 		states.Start:
-			parent.animation.play("Idle")
+			parent.animation.play("Ridle")
 
 func _exit_state(old_state,new_state):
 	match old_state:

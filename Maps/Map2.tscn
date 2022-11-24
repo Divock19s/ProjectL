@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=2]
+[gd_scene load_steps=61 format=2]
 
 [ext_resource path="res://Textures/World.tres" type="TileSet" id=1]
 [ext_resource path="res://Assets/Envirment/StaticBackground.png" type="Texture" id=2]
@@ -23,6 +23,8 @@
 [ext_resource path="res://Envirment/Obstales/Shooter.tscn" type="PackedScene" id=21]
 [ext_resource path="res://Envirment/BlueGem.tscn" type="PackedScene" id=22]
 [ext_resource path="res://Envirment/Hear.tscn" type="PackedScene" id=23]
+[ext_resource path="res://Envirment/Maps/new_shader.tres" type="Shader" id=24]
+[ext_resource path="res://Envirment/Maps/shader.png" type="Texture" id=25]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 12, 10 )
@@ -954,6 +956,11 @@ tracks/1/keys = {
 "values": [ false ]
 }
 
+[sub_resource type="ShaderMaterial" id=35]
+shader = ExtResource( 24 )
+shader_param/color = Vector3( 0.35, 0.2, 0.95 )
+shader_param/OCTAVES = 4
+
 [node name="Map2" type="Node2D"]
 script = ExtResource( 6 )
 
@@ -1081,7 +1088,7 @@ tile_data = PoolIntArray( 0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 1, 0, 5, 1, 0, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 1584, 24 )
-frame = 0
+frame = 5
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -1199,7 +1206,6 @@ speed = 5.0
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 504, 176 )
-frame = 7
 
 [node name="4Spike" type="Node2D" parent="."]
 
@@ -1571,6 +1577,36 @@ position = Vector2( 922, 346 )
 
 [node name="Heart3" parent="." instance=ExtResource( 23 )]
 position = Vector2( 58, 498 )
+
+[node name="CanvasLayer2" type="ParallaxBackground" parent="."]
+layer = 0
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="CanvasLayer2"]
+motion_mirroring = Vector2( 1280, 720 )
+
+[node name="TopLeft" type="Sprite" parent="CanvasLayer2/ParallaxLayer"]
+material = SubResource( 35 )
+texture = ExtResource( 25 )
+offset = Vector2( 320, 180 )
+
+[node name="DownLeft" type="Sprite" parent="CanvasLayer2/ParallaxLayer"]
+material = SubResource( 35 )
+texture = ExtResource( 25 )
+offset = Vector2( 320, 540 )
+flip_v = true
+
+[node name="TopRight" type="Sprite" parent="CanvasLayer2/ParallaxLayer"]
+material = SubResource( 35 )
+texture = ExtResource( 25 )
+offset = Vector2( 960, 180 )
+flip_h = true
+
+[node name="DownRight" type="Sprite" parent="CanvasLayer2/ParallaxLayer"]
+material = SubResource( 35 )
+texture = ExtResource( 25 )
+offset = Vector2( 960, 540 )
+flip_h = true
+flip_v = true
 
 [connection signal="death" from="Player" to="Gui/DeathMenu" method="_on_Player_death"]
 [connection signal="diamonds_updated" from="Player" to="." method="_on_Player_diamonds_updated"]

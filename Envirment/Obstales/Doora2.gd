@@ -10,3 +10,7 @@ func _open():
 		$AudioStreamPlayer.play()
 		$AnimationPlayer.play("Close")
 		open=false
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	$CollisionShape2D.set_deferred("disabled",false)

@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 signal health_updated(health)
-
+signal _deadBoss()
 var start=false
 var shoot=false
 var attack=false
@@ -59,6 +59,12 @@ onready var shootSound=$Shoot
 onready var transitionSound=$Transition
 onready var landSound=$Land
 
+func _star():
+	$AnimationPlayer.play("transform")
+	yield(get_tree().create_timer(0.3), "timeout")
+	$Transition.play()
+	yield(get_tree().create_timer(0.7), "timeout")
+	$Jump.play()
 func _ready():
 	emit_signal("health_updated",health)
 
@@ -172,6 +178,11 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		transit=false
 	elif anim_name=="Shoot":
 		shoot=false
+	elif anim_name=="Dead":
+		emit_signal("_deadBoss")
+		call_deferred("queue_free")
+	elif anim_name=="transform":
+		start=true
 
 func _on_WallTimer_timeout():
 	charge=false
@@ -186,14 +197,14 @@ func _on_BulletTimer_timeout():
 	_shoot(Spos3)
 
 func _on_Collide_body_entered(body):
-	if "Player" in body.name:
+	if "Player" in body.name and !dead:
 		if !body.sliding:
 			body._kill(-direction,2,200)
 			$Collide/CollisionShape2D.set_deferred("disabled",true)
 			$HurtTimer.start()
 
 func _on_Area2D_body_entered(body):
-	if "Player" in body.name:
+	if "Player" in body.name and !dead:
 		body._kill(-direction,1,200)
 
 func _on_ChargeTimer_timeout():

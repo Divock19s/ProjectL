@@ -11,14 +11,16 @@ var control
 func _input(event):
 	if !$AudioStreamPlayer2.playing and !(event is InputEventMouseMotion):
 			$AudioStreamPlayer2.play()
-	if event.is_action_pressed("one"):
-		Global.maps=("res://Maps/Map1.tscn")
-	if event.is_action_pressed("two"):
-		Global.maps=("res://Maps/Map2.tscn")
-	if event.is_action_pressed("three"):
-		Global.maps=("res://Maps/Map3.tscn")
+	if $Menu/AnimatedSprite.visible:
+		if event.is_action_pressed("ok"):
+			Global._reset()
+			$Menu/VBoxContainer/Resume.text="New Game"
+			$Menu/AnimatedSprite.visible=false
+		if event.is_action_pressed("esc"):
+			$Menu/AnimatedSprite.visible=false
 
 func _ready():
+	$Menu/AnimatedSprite.visible=false
 	MusicPlayer.main = true
 	MusicPlayer.Music.stop()
 	$AudioStreamPlayer.play()
@@ -138,7 +140,7 @@ func _tweenRight(objectt,destin):
 	outt.start()
 
 func _on_Resume_pressed():
-	if state==states.main:
+	if state==states.main and !$Menu/AnimatedSprite.visible:
 		MusicPlayer.main = false
 		if MusicPlayer.music:
 			MusicPlayer._play()
@@ -150,36 +152,35 @@ func _on_Resume_pressed():
 
 
 func _on_Reset_pressed():
-	if state==states.main:
-		Global._reset()
-		$Menu/VBoxContainer/Resume.text="New Game"
+	if state==states.main and !$Menu/AnimatedSprite.visible:
+		$Menu/AnimatedSprite.visible=true
 
 
 func _on_Options_pressed():
-	if state==states.main:
+	if state==states.main and !$Menu/AnimatedSprite.visible:
 		_change_state(states.options)
 
 
 func _on_Quit_pressed():
-	if state==states.main:
+	if state==states.main and !$Menu/AnimatedSprite.visible:
 		get_tree().quit()
 
 
 func _on_FullScreen_pressed():
-	if state==states.options:
+	if state==states.options and !$Menu/AnimatedSprite.visible:
 		OS.window_fullscreen=$Options/VBoxContainer2/FullScreen.pressed
 		Global.FullScreen=$Options/VBoxContainer2/FullScreen.pressed
 
 func _on_Support_pressed():
-	if state==states.options:
+	if state==states.options and !$Menu/AnimatedSprite.visible:
 		pass
 
 
 func _on_Controls_pressed():
-	if state==states.options:
+	if state==states.options and !$Menu/AnimatedSprite.visible:
 		_change_state(states.controls)
 
 
 func _on_Music_pressed():
-	if state==states.options:
+	if state==states.options and !$Menu/AnimatedSprite.visible:
 		MusicPlayer.music=$Options/VBoxContainer2/FullScreen.pressed
