@@ -4,6 +4,8 @@ onready var player = $Player
 onready var camera = $Player/Camera2D
 
 func _ready():
+	if !Global.fog:
+		!$CanvasLayer.call_deferred("queue_free")
 	camera.smoothing_enabled=false
 	if Global.progress>0:
 		_on_Text1_text_done()

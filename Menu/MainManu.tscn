@@ -137,7 +137,7 @@ script = ExtResource( 4 )
 scale = Vector2( 10, 10 )
 z_index = -1
 frames = SubResource( 9 )
-frame = 3
+frame = 1
 playing = true
 centered = false
 
@@ -269,7 +269,8 @@ icon_align = 1
 margin_top = 328.0
 margin_right = 282.0
 margin_bottom = 406.0
-text = "Credits"
+pressed = true
+text = "Fog"
 align = 1
 icon_align = 1
 

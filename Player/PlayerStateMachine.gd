@@ -308,6 +308,8 @@ func _enter_state(new_state,old_state):
 			parent.footSound.stop()
 			parent.plAnimation.play("Crouch")
 		states.Stealth:
+			parent.walkSpeed=20
+			parent.walkAcc=100
 			parent.footSound.stop()
 			parent.plAnimation.play("Stealth")
 		states.Dash:

@@ -5,6 +5,8 @@ onready var camera = $Player/Camera2D
 onready var dia5=preload("res://Envirment/YellowGem.tscn")
 
 func _ready():
+	if !Global.fog:
+		!$CanvasLayer.call_deferred("queue_free")
 	camera.smoothing_enabled=false
 	$"One Dore".open=Global.diamonds>0
 	if Global.posa=="left":

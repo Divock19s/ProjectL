@@ -14,6 +14,8 @@ func _ready():
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
+	MusicPlayer.boss=false
+	MusicPlayer._play()
 	Global.maps=("res://Maps/Map1.tscn")
 	var _k = get_tree().change_scene(Global.maps)
 	

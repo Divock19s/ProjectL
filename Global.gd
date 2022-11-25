@@ -1,6 +1,6 @@
 extends Node
 
-var data={"diamonds":0,"health":4,"progress":0,"FullScreen":true,"music":true,
+var data={"diamonds":0,"health":4,"progress":0,"FullScreen":true,"music":true,"fog":true,
 "posa":"new","glo":Vector2(0,0),"mos":Vector2(0,0),"maps":"res://Story.tscn"}
 
 var path="user://save.dat"
@@ -10,6 +10,7 @@ var health
 var progress
 var FullScreen
 var music
+var fog
 var dead
 var posa
 var glo_pos
@@ -26,6 +27,7 @@ func _set_data():
 	progress=data.progress
 	FullScreen=data.FullScreen
 	music = data.music
+	fog= data.fog
 	dead=false
 	posa=data.posa
 	glo_pos=data.glo
@@ -33,7 +35,7 @@ func _set_data():
 	maps=data.maps
 
 func _save():
-	var nata={"diamonds":diamonds,"health":health,"progress":progress,"FullScreen":FullScreen,"music":music,
+	var nata={"diamonds":diamonds,"health":health,"progress":progress,"FullScreen":FullScreen,"music":music,"fog":fog,
 	"posa":posa,"glo":glo_pos,"mos":map_pos,"maps":maps}
 	var file = File.new()
 	var error = file.open_encrypted_with_pass(path,File.WRITE,"Astalavista")
@@ -50,7 +52,7 @@ func _load():
 			file.close()
 
 func _reset():
-	var nata={"diamonds":0,"health":4,"progress":0,"FullScreen":true,"music":true,
+	var nata={"diamonds":0,"health":4,"progress":0,"FullScreen":true,"music":true,"fog":true,
 	"posa":"new","glo":Vector2(0,0),"mos":Vector2(0,0),"maps":"res://Story.tscn"}
 	var file = File.new()
 	var error = file.open_encrypted_with_pass(path,File.WRITE,"Astalavista")

@@ -437,7 +437,7 @@ speed = 40.0
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 56, 128 )
-frame = 6
+frame = 5
 
 [node name="4Spike" type="Node2D" parent="."]
 
@@ -904,7 +904,7 @@ position = Vector2( 24, 36 )
 position = Vector2( 808, 2640 )
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
-frame = 1
+frame = 0
 
 [node name="Heart" parent="." instance=ExtResource( 22 )]
 position = Vector2( 560, 480 )

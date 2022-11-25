@@ -25,6 +25,8 @@ run/main_scene="res://Logos.tscn"
 boot_splash/image="res://Assets/SplashScreen.png"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://icon.png"
+config/macos_native_icon="res://icon.ico"
+config/windows_native_icon="res://icon.ico"
 
 [autoload]
 

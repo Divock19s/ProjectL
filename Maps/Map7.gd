@@ -4,7 +4,10 @@ onready var player = $Player
 onready var camera = $Player/Camera2D
 var innn=false
 func _ready():
-	pass
+	if !Global.fog:
+		!$CanvasLayer.call_deferred("queue_free")
+	MusicPlayer.boss=true
+	MusicPlayer._play_boss()
 	$Player/CanvasLayer/HealthBar.visible=false
 	$Drone.global_position=$Player.global_position
 	camera.global_position=$Player.global_position
@@ -17,6 +20,7 @@ func _ready():
 	Global._save()
 
 func _end():
+	Global.posa="check"
 	Global.maps=("res://Maps/Map1.tscn")
 	$AnimationPlayer.play("end")
 
@@ -33,7 +37,7 @@ func _on_In_body_entered(body):
 			$Player/CanvasLayer/HealthBar.visible=true
 			$Tween.interpolate_property(camera,"zoom",camera.zoom,Vector2(0.25,0.25),2,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT,1.0)
 			$Tween.start()
-			$Tween.interpolate_property(camera,"limit_right",camera.limit_right,384,2,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT,1.0)
+			$Tween.interpolate_property(camera,"limit_right",camera.limit_right,384,7,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT,1.0)
 			$Tween.start()
 			$Door._open()
 			innn=true
@@ -45,5 +49,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name=="end":
 		var _k = get_tree().change_scene("res://Maps/end.tscn")
 	else:
+		MusicPlayer.boss=false
+		MusicPlayer._play()
 		player._store_health()
 		var _k = get_tree().change_scene(Global.maps)

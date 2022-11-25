@@ -16,6 +16,7 @@ func _input(event):
 			Global._reset()
 			$Menu/VBoxContainer/Resume.text="New Game"
 			$Menu/AnimatedSprite.visible=false
+			$Menu/VBoxContainer/Reset.disabled=true
 		if event.is_action_pressed("esc"):
 			$Menu/AnimatedSprite.visible=false
 
@@ -24,6 +25,7 @@ func _ready():
 	MusicPlayer.main = true
 	MusicPlayer.Music.stop()
 	$AudioStreamPlayer.play()
+	$Options/VBoxContainer2/FullScreen.pressed=Global.fog
 	$Options/VBoxContainer2/FullScreen.pressed=Global.FullScreen
 	$Options/VBoxContainer2/Music.pressed=Global.music
 	MusicPlayer.music=$Options/VBoxContainer2/Music.pressed
@@ -173,7 +175,7 @@ func _on_FullScreen_pressed():
 
 func _on_Support_pressed():
 	if state==states.options and !$Menu/AnimatedSprite.visible:
-		pass
+		Global.fog=$Options/VBoxContainer2/Support.pressed
 
 
 func _on_Controls_pressed():

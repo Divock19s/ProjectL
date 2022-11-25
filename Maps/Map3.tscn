@@ -710,23 +710,23 @@ speed = 5.0
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 44, 280 )
-frame = 0
+frame = 8
 
 [node name="TV5" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 3048, 240 )
-frame = 9
+frame = 7
 
 [node name="TV2" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 1800, 200 )
-frame = 0
+frame = 8
 
 [node name="TV3" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 2216, 120 )
-frame = 9
+frame = 7
 
 [node name="TV4" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 3496, 240 )
-frame = 9
+frame = 7
 
 [node name="4Spike" type="Node2D" parent="."]
 

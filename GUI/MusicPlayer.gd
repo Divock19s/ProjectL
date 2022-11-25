@@ -2,31 +2,19 @@ extends Node
 onready var Music=$AudioStreamPlayer
 var calm=load("res://Assets/Music/GamePlay-Loop-2-Hope.mp3")
 var intense=load("res://Assets/Music/Game-play-loop-Intense.mp3")
-var usic=intense
-var M=1
-var music = true
+var boss=false
 var main = true
 var i=0
 func _play():
-	if !music:
-		Music.stop()
-		return
-	if M!=2:
-		Music.volume_db=12
-		Music.stream=intense
-	if i>1:
-		if M==1:
-			Music.volume_db=12
-			Music.stream=intense
-			M=2
-		elif M==2:
-			Music.volume_db=-6
-			Music.stream=calm
-			M=1
-		i=0
+	Music.volume_db=-6
+	Music.stream=calm
 	Music.play()
-
+func _play_boss():
+	Music.volume_db=0
+	Music.stream=intense
+	Music.play()
 func _on_AudioStreamPlayer_finished():
-	if !main:
-		i+=1
-		_play()
+	if boss:
+		_play_boss()
+	elif !main:
+		Music._play()
