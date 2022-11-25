@@ -1079,7 +1079,7 @@ tile_data = PoolIntArray( 0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 1, 0, 5, 1, 0, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 1584, 24 )
-frame = 4
+frame = 1
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -1197,7 +1197,7 @@ speed = 5.0
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 504, 176 )
-frame = 7
+frame = 0
 
 [node name="4Spike" type="Node2D" parent="."]
 

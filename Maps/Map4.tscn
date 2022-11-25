@@ -524,6 +524,7 @@ tile_data = PoolIntArray( 0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 1, 0, 5, 1, 0, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 1584, 24 )
+frame = 2
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -542,14 +543,14 @@ color = Color( 0, 0, 0, 1 )
 position = Vector2( 80, 608 )
 scale = Vector2( -0.272669, 0.374901 )
 remove = true
-prog = 1
+prog = 3
 tex = [ "I don't think that you are ready yet to get the doublejump gem." ]
 
 [node name="Text2" parent="." instance=ExtResource( 12 )]
 position = Vector2( 32, 104 )
 scale = Vector2( -0.272669, 0.374901 )
 remove = true
-prog = 1
+prog = 3
 tex = [ "I don't think that you are ready yet to get the doublejump gem." ]
 
 [node name="MovingPlatform" parent="." instance=ExtResource( 8 )]
@@ -601,11 +602,11 @@ speed = 15.0
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 1320, 192 )
-frame = 2
+frame = 3
 
 [node name="TV2" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 64, 616 )
-frame = 2
+frame = 3
 
 [node name="4Spike" type="Node2D" parent="."]
 

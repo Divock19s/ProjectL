@@ -25,10 +25,9 @@ func _ready():
 	MusicPlayer.main = true
 	MusicPlayer.Music.stop()
 	$AudioStreamPlayer.play()
-	$Options/VBoxContainer2/FullScreen.pressed=Global.fog
+#	$Options/VBoxContainer2/FullScreen.pressed=Global.fog
 	$Options/VBoxContainer2/FullScreen.pressed=Global.FullScreen
 	$Options/VBoxContainer2/Music.pressed=Global.music
-	MusicPlayer.music=$Options/VBoxContainer2/Music.pressed
 	OS.window_fullscreen=Global.FullScreen
 	$Label.visible=false
 	$Label2.visible=false
@@ -146,7 +145,6 @@ func _on_Resume_pressed():
 		MusicPlayer.main = false
 		if MusicPlayer.music:
 			MusicPlayer._play()
-			MusicPlayer.M=2
 		else:
 			MusicPlayer.Music.stop()
 		var _k = get_tree().change_scene(Global.maps)

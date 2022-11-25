@@ -5,7 +5,7 @@ onready var camera = $Player/Camera2D
 var innn=false
 func _ready():
 	if !Global.fog:
-		!$CanvasLayer.call_deferred("queue_free")
+		!$CanvasLayer2.call_deferred("queue_free")
 	MusicPlayer.boss=true
 	MusicPlayer._play_boss()
 	$Player/CanvasLayer/HealthBar.visible=false

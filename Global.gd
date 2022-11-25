@@ -5,6 +5,7 @@ var data={"diamonds":0,"health":4,"progress":0,"FullScreen":true,"music":true,"f
 
 var path="user://save.dat"
 
+var siz=data.size()
 var diamonds
 var health
 var progress
@@ -22,17 +23,20 @@ func _init():
 	_set_data()
 
 func _set_data():
-	diamonds = data.diamonds
-	health = data.health
-	progress=data.progress
-	FullScreen=data.FullScreen
-	music = data.music
-	fog= data.fog
-	dead=false
-	posa=data.posa
-	glo_pos=data.glo
-	map_pos=data.mos
-	maps=data.maps
+	if data.size()==siz:
+		diamonds = data.diamonds
+		health = data.health
+		progress=data.progress
+		FullScreen=data.FullScreen
+		music = data.music
+		fog= data.fog
+		dead=false
+		posa=data.posa
+		glo_pos=data.glo
+		map_pos=data.mos
+		maps=data.maps
+		return
+	_reset()
 
 func _save():
 	var nata={"diamonds":diamonds,"health":health,"progress":progress,"FullScreen":FullScreen,"music":music,"fog":fog,
@@ -60,4 +64,14 @@ func _reset():
 		file.store_var(nata)
 		file.close()
 	data=nata
-	_set_data()
+	diamonds = data.diamonds
+	health = data.health
+	progress=data.progress
+	FullScreen=data.FullScreen
+	music = data.music
+	fog= data.fog
+	dead=false
+	posa=data.posa
+	glo_pos=data.glo
+	map_pos=data.mos
+	maps=data.maps

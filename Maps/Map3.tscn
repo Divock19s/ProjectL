@@ -608,7 +608,7 @@ tile_data = PoolIntArray( 0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 1, 0, 5, 1, 0, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 1584, 24 )
-frame = 5
+frame = 4
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -634,21 +634,21 @@ tex = [ "This area countains three gems, but for now you can only get one of the
 position = Vector2( 3064, 240 )
 scale = Vector2( 0.318408, 0.485787 )
 remove = true
-prog = 1
+prog = 5
 tex = [ "This is the dash diamond, it also allows you to slide and knock down enemies without killing them.", "Be be carefull to hit any doors." ]
 
 [node name="Text3" parent="." instance=ExtResource( 12 )]
 position = Vector2( 96, 256 )
 scale = Vector2( -0.271891, 0.414548 )
 remove = true
-prog = 1
+prog = 8
 tex = [ "Now you have all the powers, you are fit to defeat the spider !!!!", "You can also now kill enemies without loosing powers." ]
 
 [node name="Text4" parent="." instance=ExtResource( 12 )]
 position = Vector2( 1824, 184 )
 scale = Vector2( -0.271891, 0.414548 )
 remove = true
-prog = 2
+prog = 3
 tex = [ "Don't worry, you are not stuck, this gem allows you to walljump" ]
 
 [node name="MovingPlatform" parent="." instance=ExtResource( 8 )]
@@ -710,23 +710,23 @@ speed = 5.0
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 44, 280 )
-frame = 8
+frame = 7
 
 [node name="TV5" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 3048, 240 )
-frame = 7
+frame = 6
 
 [node name="TV2" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 1800, 200 )
-frame = 8
+frame = 7
 
 [node name="TV3" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 2216, 120 )
-frame = 7
+frame = 6
 
 [node name="TV4" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 3496, 240 )
-frame = 7
+frame = 6
 
 [node name="4Spike" type="Node2D" parent="."]
 
