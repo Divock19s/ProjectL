@@ -210,7 +210,7 @@ tracks/5/keys = {
 "times": PoolRealArray( 0, 27, 90 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 140, 720 ), Vector2( 140, 720 ), Vector2( 140, -2000 ) ]
+"values": [ Vector2( 140, 720 ), Vector2( 140, 720 ), Vector2( 140, -2200 ) ]
 }
 
 [sub_resource type="Animation" id=20]
@@ -319,7 +319,7 @@ script = ExtResource( 29 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 15 )
-frame = 9
+frame = 8
 playing = true
 centered = false
 
@@ -358,25 +358,29 @@ text = "Executing the final phase ProjectL production, after the successfull tes
 margin_left = 140.0
 margin_top = 720.0
 margin_right = 1140.0
-margin_bottom = 2720.0
+margin_bottom = 2922.0
 theme = SubResource( 24 )
 text = "This game was made for
 the Game Off 2022 jam
 i would like to thank 
 Lee Reilly and GitHub for 
-this occasion, and ofcourse
-special thanks for you 
-the person who managed 
-to finish it, and to all the
-people that helped me.
-Well to the only person who
-helped me and suppoerted
-me , Ahmad Mawardi, big 
-thanks to you bro, for 
-all the ideas and the
-support and the ingame
-music, thx again for playing
-you all, and piece."
+this opportunity, and 
+of coursespecial thanks 
+for you the person who 
+managed to finish it.
+And finally the person who
+supported me all along
+made the ingame music, 
+gave me ideas and advices
+and tested the game many
+times, big thanks to
+ Ahmad Mawardi.
+If you guys made it this
+far, you could support
+me with even a simple
+feedback in my itch.io
+Link is in Extras-Support
+ "
 align = 1
 
 [node name="ColorRect2" type="ColorRect" parent="."]

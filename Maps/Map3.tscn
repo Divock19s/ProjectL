@@ -608,7 +608,7 @@ tile_data = PoolIntArray( 0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 1, 0, 5, 1, 0, 
 
 [node name="Drone" parent="." instance=ExtResource( 10 )]
 position = Vector2( 1584, 24 )
-frame = 4
+frame = 0
 
 [node name="Gui" type="CanvasLayer" parent="."]
 layer = 3
@@ -648,7 +648,7 @@ tex = [ "Now you have all the powers, you are fit to defeat the spider !!!!", "Y
 position = Vector2( 1824, 184 )
 scale = Vector2( -0.271891, 0.414548 )
 remove = true
-prog = 3
+prog = 2
 tex = [ "Don't worry, you are not stuck, this gem allows you to walljump" ]
 
 [node name="MovingPlatform" parent="." instance=ExtResource( 8 )]
@@ -710,23 +710,20 @@ speed = 5.0
 
 [node name="TV" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 44, 280 )
-frame = 7
+frame = 5
 
 [node name="TV5" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 3048, 240 )
-frame = 6
 
 [node name="TV2" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 1800, 200 )
-frame = 7
+frame = 5
 
 [node name="TV3" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 2216, 120 )
-frame = 6
 
 [node name="TV4" parent="Tv" instance=ExtResource( 13 )]
 position = Vector2( 3496, 240 )
-frame = 6
 
 [node name="4Spike" type="Node2D" parent="."]
 

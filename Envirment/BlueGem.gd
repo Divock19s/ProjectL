@@ -15,7 +15,6 @@ func _on_Area2D_body_entered(body):
 		if Global.progress<2:
 			Global.progress=2
 		body.diamonds=1
-		Global.progress+=1
 		$AnimatedSprite.play("Collect")
 		Global._save()
 

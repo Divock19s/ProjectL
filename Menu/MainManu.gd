@@ -25,7 +25,7 @@ func _ready():
 	MusicPlayer.main = true
 	MusicPlayer.Music.stop()
 	$AudioStreamPlayer.play()
-#	$Options/VBoxContainer2/FullScreen.pressed=Global.fog
+	$Options/VBoxContainer2/Support.pressed=Global.fog
 	$Options/VBoxContainer2/FullScreen.pressed=Global.FullScreen
 	$Options/VBoxContainer2/Music.pressed=Global.music
 	OS.window_fullscreen=Global.FullScreen
@@ -183,4 +183,5 @@ func _on_Controls_pressed():
 
 func _on_Music_pressed():
 	if state==states.options and !$Menu/AnimatedSprite.visible:
-		MusicPlayer.music=$Options/VBoxContainer2/FullScreen.pressed
+		MusicPlayer.music=$Options/VBoxContainer2/Music.pressed
+		Global.music=MusicPlayer.music
